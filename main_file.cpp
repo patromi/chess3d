@@ -192,6 +192,17 @@ float boardVerts[] = {
 	5.0f, 0.5f, -6.0f, 1.0f
 };
 
+float boardBorderVertsLeft[] = {
+	// Lewa krawędź
+	5.0f, 0.0f, -6.0f, 1.0f,
+	5.0f, 0.5f, -6.0f, 1.0f,
+	5.0f, 0.5f, -5.0f, 1.0f,
+	5.0f, 0.0f, -6.0f, 1.0f,
+	5.0f, 0.5f, -5.0f, 1.0f,
+	5.0f, 0.0f, -5.0f, 1.0f
+
+};
+
 
 float whiteColor[] = {
 	1.0f, 1.0f, 1.0f, 1.0f,
