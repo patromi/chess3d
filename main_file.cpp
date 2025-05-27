@@ -393,17 +393,7 @@ float brownColor[] = {
 //	glfwSwapBuffers(window); //Skopiuj bufor tylny do bufora przedniego
 //}
 
-void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glm::mat4 M = glm::mat4(1.0f);
-	//M = glm::scale(M, glm::vec3(0.2f, 0.2f, 0.2f));
-	M = glm::rotate(M, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
-	M = glm::rotate(M, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
-
-	glm::mat4 V = glm::lookAt(glm::vec3(0.0f, 3.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);
-
+void drawBoard(glm::mat4 M, glm::mat4 V, glm::mat4 P, float angle_x, float angle_y) {
 	spTextured->use();
 	glUniformMatrix4fv(spTextured->u("P"), 1, false, glm::value_ptr(P));
 	glUniformMatrix4fv(spTextured->u("V"), 1, false, glm::value_ptr(V));
@@ -466,6 +456,23 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
 
 	glDisableVertexAttribArray(spTextured->a("vertex"));
 	glDisableVertexAttribArray(spTextured->a("texCoord"));
+
+
+}
+
+void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glm::mat4 M = glm::mat4(1.0f);
+	//M = glm::scale(M, glm::vec3(0.2f, 0.2f, 0.2f));
+	M = glm::rotate(M, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
+	M = glm::rotate(M, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
+
+	glm::mat4 V = glm::lookAt(glm::vec3(0.0f, 3.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);
+
+	drawBoard(M, V, P, angle_x, angle_y);
+
 
 	glfwSwapBuffers(window);
 }
