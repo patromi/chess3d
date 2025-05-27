@@ -32,6 +32,7 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "shaderprogram.h"
 #include "myCube.h"
 #include "myTeapot.h"
+#include "board.h"
 
 #include "Model.h"
 
@@ -139,66 +140,6 @@ void freeOpenGLProgram(GLFWwindow* window) {
 }
 
 
-
-float boardVerts[] = {
-	// Dolna podstawa (Y=0)
-	3.5f, 0.0f, -6.0f, 1.0f,
-	3.5f, 0.0f, -5.0f, 1.0f,
-	2.5f, 0.0f, -5.0f, 1.0f,
-
-	3.5f, 0.0f, -6.0f, 1.0f,
-	2.5f, 0.0f, -5.0f, 1.0f,
-	2.5f, 0.0f, -6.0f, 1.0f,
-
-	// Górna podstawa (Y=0.5)
-	3.5f, 0.5f, -6.0f, 1.0f,
-	2.5f, 0.5f, -5.0f, 1.0f,
-	3.5f, 0.5f, -5.0f, 1.0f,
-
-	3.5f, 0.5f, -6.0f, 1.0f,
-	2.5f, 0.5f, -6.0f, 1.0f,
-	2.5f, 0.5f, -5.0f, 1.0f,
-
-	// Ściana 1 (bok) - X=6 -> 3.5
-	3.5f, 0.0f, -6.0f, 1.0f,
-	3.5f, 0.5f, -6.0f, 1.0f,
-	3.5f, 0.5f, -5.0f, 1.0f,
-
-	3.5f, 0.0f, -6.0f, 1.0f,
-	3.5f, 0.5f, -5.0f, 1.0f,
-	3.5f, 0.0f, -5.0f, 1.0f,
-
-	// Ściana 2 (bok) - X=5 -> 2.5
-	2.5f, 0.0f, -6.0f, 1.0f,
-	2.5f, 0.5f, -5.0f, 1.0f,
-	2.5f, 0.5f, -6.0f, 1.0f,
-
-	2.5f, 0.0f, -6.0f, 1.0f,
-	2.5f, 0.0f, -5.0f, 1.0f,
-	2.5f, 0.5f, -5.0f, 1.0f,
-
-	// Ściana 3 (Z=-5)
-	3.5f, 0.0f, -5.0f, 1.0f,
-	3.5f, 0.5f, -5.0f, 1.0f,
-	2.5f, 0.5f, -5.0f, 1.0f,
-
-	3.5f, 0.0f, -5.0f, 1.0f,
-	2.5f, 0.5f, -5.0f, 1.0f,
-	2.5f, 0.0f, -5.0f, 1.0f,
-
-	// Ściana 4 (Z=-6)
-	3.5f, 0.0f, -6.0f, 1.0f,
-	2.5f, 0.5f, -6.0f, 1.0f,
-	3.5f, 0.5f, -6.0f, 1.0f,
-
-	3.5f, 0.0f, -6.0f, 1.0f,
-	2.5f, 0.0f, -6.0f, 1.0f,
-	2.5f, 0.5f, -6.0f, 1.0f
-};
-
-
-
-
 float boardBorderVertsLeft[] = {
 	// Lewa krawędź
 	5.0f, 0.0f, -6.0f, 1.0f,
@@ -211,187 +152,6 @@ float boardBorderVertsLeft[] = {
 };
 
 
-float whiteColor[] = {
-	1.0f, 1.0f, 1.0f, 1.0f,
-	1.0f,1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f, 1.0f,
-
-	1.0f, 1.0f, 1.0f, 1.0f,
-	1.0f,1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f, 1.0f,
-
-	1.0f, 1.0f, 1.0f, 1.0f,
-	1.0f,1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f, 1.0f,
-
-	1.0f, 1.0f, 1.0f, 1.0f,
-	1.0f,1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f, 1.0f,
-
-	1.0f, 1.0f, 1.0f, 1.0f,
-	1.0f,1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f, 1.0f,
-
-	1.0f, 1.0f, 1.0f, 1.0f,
-	1.0f,1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f, 1.0f,
-
-	1.0f, 1.0f, 1.0f, 1.0f,
-	1.0f,1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f, 1.0f,
-
-	1.0f, 1.0f, 1.0f, 1.0f,
-	1.0f,1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f, 1.0f,
-
-	1.0f, 1.0f, 1.0f, 1.0f,
-	1.0f,1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f, 1.0f,
-
-	1.0f, 1.0f, 1.0f, 1.0f,
-	1.0f,1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f, 1.0f,
-
-	1.0f, 1.0f, 1.0f, 1.0f,
-	1.0f,1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f, 1.0f,
-
-	1.0f, 1.0f, 1.0f, 1.0f,
-	1.0f,1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f, 1.0f
-};
-
-
-float brownColor[] = {
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f,
-	0.6f, 0.3f, 0.0f, 1.0f
-
-
-};
-
-
-//Procedura rysująca zawartość sceny
-//void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
-//	//************Tutaj umieszczaj kod rysujący obraz******************l
-//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Wyczyść bufor koloru i bufor głębokości
-//
-//	glm::mat4 M = glm::mat4(1.0f); //Zainicjuj macierz modelu macierzą jednostkową
-//	M = glm::scale(M, glm::vec3(0.2f, 0.2f, 0.2f)); //Pomnóż macierz modelu razy macierz skalowania o współczynnik 0.5
-//	M = glm::rotate(M, angle_y, glm::vec3(0.0f, 1.0f, 0.0f)); //Pomnóż macierz modelu razy macierz obrotu o kąt angle wokół osi Y
-//	M = glm::rotate(M, angle_x, glm::vec3(1.0f, 0.0f, 0.0f)); //Pomnóż macierz modelu razy macierz obrotu o kąt angle wokół osi X
-//	//glm::mat4 V = glm::lookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //Wylicz macierz widoku
-//	glm::mat4 V = glm::lookAt(glm::vec3(0.0f, 3.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //Wylicz macierz widoku
-//	glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f); //Wylicz macierz rzutowania
-//
-//
-//	spTextured->use();
-//	glUniformMatrix4fv(spTextured->u("P"), 1, false, glm::value_ptr(P));
-//	glUniformMatrix4fv(spTextured->u("V"), 1, false, glm::value_ptr(V));
-//	glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
-//
-//	//wstępne rysowanie szachownicy
-//	glEnableVertexAttribArray(spTextured->a("vertex"));
-//	glVertexAttribPointer(spTextured->a("vertex"), 4, GL_FLOAT, false, 0, boardVerts);
-//
-//	glEnableVertexAttribArray(spTextured->a("color"));
-//
-//	for (int j = 0; j < 4; j++) {
-//
-//		for (int i = 0; i < 4; i++) {
-//			// Zresetuj macierz modelu na początku każdej iteracji
-//			M = glm::mat4(1.0f);
-//			M = glm::scale(M, glm::vec3(0.2f, 0.2f, 0.2f));
-//			M = glm::rotate(M, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
-//			M = glm::rotate(M, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
-//
-//			// Przesunięcie dla pary kostek
-//			M = glm::translate(M, glm::vec3(i * -2.0f, 0.0f, j*2.0f));
-//
-//			// --- Rysuj brązową kostkę ---
-//			glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
-//			glVertexAttribPointer(spTextured->a("color"), 4, GL_FLOAT, false, 0, brownColor);
-//			glDrawArrays(GL_TRIANGLES, 0, 36);
-//
-//			// --- Rysuj białą kostkę (przesunięta względem brązowej) ---
-//			M = glm::translate(M, glm::vec3(-1.0f, 0.0f, 0.0f)); // modyfikujemy M
-//			glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
-//			glVertexAttribPointer(spTextured->a("color"), 4, GL_FLOAT, false, 0, whiteColor);
-//			glDrawArrays(GL_TRIANGLES, 0, 36);
-//		}
-//
-//		for (int i = 0; i < 4; i++) {
-//			// Zresetuj macierz modelu na początku każdej iteracji
-//			M = glm::mat4(1.0f);
-//			M = glm::scale(M, glm::vec3(0.2f, 0.2f, 0.2f));
-//			M = glm::rotate(M, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
-//			M = glm::rotate(M, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
-//
-//			// Przesunięcie dla pary kostek
-//			M = glm::translate(M, glm::vec3(i * -2.0f, 0.0f, j*2.0f+1));
-//
-//			// --- Rysuj brązową kostkę ---
-//			glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
-//			glVertexAttribPointer(spTextured->a("color"), 4, GL_FLOAT, false, 0, whiteColor);
-//			glDrawArrays(GL_TRIANGLES, 0, 36);
-//
-//			// --- Rysuj białą kostkę (przesunięta względem brązowej) ---
-//			M = glm::translate(M, glm::vec3(-1.0f, 0.0f, 0.0f)); // modyfikujemy M
-//			glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
-//			glVertexAttribPointer(spTextured->a("color"), 4, GL_FLOAT, false, 0, brownColor);
-//			glDrawArrays(GL_TRIANGLES, 0, 36);
-//		}
-//	}
-//
-//	glDisableVertexAttribArray(spTextured->a("vertex"));
-//	glDisableVertexAttribArray(spTextured->a("color"));
-//
-//	glfwSwapBuffers(window); //Skopiuj bufor tylny do bufora przedniego
-//}
 
 void drawBoard(glm::mat4 M, glm::mat4 V, glm::mat4 P, float angle_x, float angle_y) {
 	spTextured->use();
@@ -403,7 +163,7 @@ void drawBoard(glm::mat4 M, glm::mat4 V, glm::mat4 P, float angle_x, float angle
 	glVertexAttribPointer(spTextured->a("vertex"), 4, GL_FLOAT, false, 0, boardVerts);
 
 	glEnableVertexAttribArray(spTextured->a("texCoord"));
-	glVertexAttribPointer(spTextured->a("texCoord"), 2, GL_FLOAT, false, 0, myCubeTexCoords1); // <- musisz zadeklarować texCoords[]
+	glVertexAttribPointer(spTextured->a("texCoord"), 2, GL_FLOAT, false, 0, myBoardTexCoords); // <- musisz zadeklarować texCoords[]
 
 	for (int j = 0; j < 4; j++) {
 		for (int i = 0; i < 4; i++) {
