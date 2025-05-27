@@ -1,6 +1,4 @@
-#ifndef BOARD_H_INCLUDED
-#define BOARD_H_INCLUDED
-
+#pragma once
 float boardVerts[] = {
 	// Dolna podstawa (Y=0)
 	3.5f, 0.0f, -6.0f, 1.0f,
@@ -82,8 +80,3 @@ float myBoardTexCoords[] = {
 	1.0f,1.0f, 0.0f,0.0f, 0.0f,1.0f,
 	1.0f,1.0f, 1.0f,0.0f, 0.0f,0.0f,
 };
-
-
-//int myCubeVertexCount = 36;
-
-#endif // BOARD_H_INCLUDED

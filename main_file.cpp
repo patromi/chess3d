@@ -32,7 +32,7 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "shaderprogram.h"
 #include "myCube.h"
 #include "myTeapot.h"
-#include "board.h"
+#include "myBoard.h"
 
 #include "Model.h"
 
