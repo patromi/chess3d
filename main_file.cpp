@@ -138,61 +138,66 @@ void freeOpenGLProgram(GLFWwindow* window) {
 
 }
 
+
+
 float boardVerts[] = {
 	// Dolna podstawa (Y=0)
-	6.0f, 0.0f, -6.0f, 1.0f,
-	6.0f, 0.0f, -5.0f, 1.0f,
-	5.0f, 0.0f, -5.0f, 1.0f,
+	3.5f, 0.0f, -6.0f, 1.0f,
+	3.5f, 0.0f, -5.0f, 1.0f,
+	2.5f, 0.0f, -5.0f, 1.0f,
 
-	6.0f, 0.0f, -6.0f, 1.0f,
-	5.0f, 0.0f, -5.0f, 1.0f,
-	5.0f, 0.0f, -6.0f, 1.0f,
+	3.5f, 0.0f, -6.0f, 1.0f,
+	2.5f, 0.0f, -5.0f, 1.0f,
+	2.5f, 0.0f, -6.0f, 1.0f,
 
 	// Górna podstawa (Y=0.5)
-	6.0f, 0.5f, -6.0f, 1.0f,
-	5.0f, 0.5f, -5.0f, 1.0f,
-	6.0f, 0.5f, -5.0f, 1.0f,
+	3.5f, 0.5f, -6.0f, 1.0f,
+	2.5f, 0.5f, -5.0f, 1.0f,
+	3.5f, 0.5f, -5.0f, 1.0f,
 
-	6.0f, 0.5f, -6.0f, 1.0f,
-	5.0f, 0.5f, -6.0f, 1.0f,
-	5.0f, 0.5f, -5.0f, 1.0f,
+	3.5f, 0.5f, -6.0f, 1.0f,
+	2.5f, 0.5f, -6.0f, 1.0f,
+	2.5f, 0.5f, -5.0f, 1.0f,
 
-	// Ściana 1 (bok) - łącząca dolną i górną podstawkę (X=6)
-	6.0f, 0.0f, -6.0f, 1.0f,
-	6.0f, 0.5f, -6.0f, 1.0f,
-	6.0f, 0.5f, -5.0f, 1.0f,
+	// Ściana 1 (bok) - X=6 -> 3.5
+	3.5f, 0.0f, -6.0f, 1.0f,
+	3.5f, 0.5f, -6.0f, 1.0f,
+	3.5f, 0.5f, -5.0f, 1.0f,
 
-	6.0f, 0.0f, -6.0f, 1.0f,
-	6.0f, 0.5f, -5.0f, 1.0f,
-	6.0f, 0.0f, -5.0f, 1.0f,
+	3.5f, 0.0f, -6.0f, 1.0f,
+	3.5f, 0.5f, -5.0f, 1.0f,
+	3.5f, 0.0f, -5.0f, 1.0f,
 
-	// Ściana 2 (bok) - łącząca dolną i górną podstawkę (X=5)
-	5.0f, 0.0f, -6.0f, 1.0f,
-	5.0f, 0.5f, -5.0f, 1.0f,
-	5.0f, 0.5f, -6.0f, 1.0f,
+	// Ściana 2 (bok) - X=5 -> 2.5
+	2.5f, 0.0f, -6.0f, 1.0f,
+	2.5f, 0.5f, -5.0f, 1.0f,
+	2.5f, 0.5f, -6.0f, 1.0f,
 
-	5.0f, 0.0f, -6.0f, 1.0f,
-	5.0f, 0.0f, -5.0f, 1.0f,
-	5.0f, 0.5f, -5.0f, 1.0f,
+	2.5f, 0.0f, -6.0f, 1.0f,
+	2.5f, 0.0f, -5.0f, 1.0f,
+	2.5f, 0.5f, -5.0f, 1.0f,
 
-	// Ściana 3 (bok) - łącząca dolną i górną podstawkę (Z=-5)
-	6.0f, 0.0f, -5.0f, 1.0f,
-	6.0f, 0.5f, -5.0f, 1.0f,
-	5.0f, 0.5f, -5.0f, 1.0f,
+	// Ściana 3 (Z=-5)
+	3.5f, 0.0f, -5.0f, 1.0f,
+	3.5f, 0.5f, -5.0f, 1.0f,
+	2.5f, 0.5f, -5.0f, 1.0f,
 
-	6.0f, 0.0f, -5.0f, 1.0f,
-	5.0f, 0.5f, -5.0f, 1.0f,
-	5.0f, 0.0f, -5.0f, 1.0f,
+	3.5f, 0.0f, -5.0f, 1.0f,
+	2.5f, 0.5f, -5.0f, 1.0f,
+	2.5f, 0.0f, -5.0f, 1.0f,
 
-	// Ściana 4 (bok) - łącząca dolną i górną podstawkę (Z=-6)
-	6.0f, 0.0f, -6.0f, 1.0f,
-	5.0f, 0.5f, -6.0f, 1.0f,
-	6.0f, 0.5f, -6.0f, 1.0f,
+	// Ściana 4 (Z=-6)
+	3.5f, 0.0f, -6.0f, 1.0f,
+	2.5f, 0.5f, -6.0f, 1.0f,
+	3.5f, 0.5f, -6.0f, 1.0f,
 
-	6.0f, 0.0f, -6.0f, 1.0f,
-	5.0f, 0.0f, -6.0f, 1.0f,
-	5.0f, 0.5f, -6.0f, 1.0f
+	3.5f, 0.0f, -6.0f, 1.0f,
+	2.5f, 0.0f, -6.0f, 1.0f,
+	2.5f, 0.5f, -6.0f, 1.0f
 };
+
+
+
 
 float boardBorderVertsLeft[] = {
 	// Lewa krawędź
@@ -392,7 +397,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glm::mat4 M = glm::mat4(1.0f);
-	M = glm::scale(M, glm::vec3(0.2f, 0.2f, 0.2f));
+	//M = glm::scale(M, glm::vec3(0.2f, 0.2f, 0.2f));
 	M = glm::rotate(M, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
 	M = glm::rotate(M, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
 
@@ -414,7 +419,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
 		for (int i = 0; i < 4; i++) {
 			// Macierz i pozycjonowanie
 			M = glm::mat4(1.0f);
-			M = glm::scale(M, glm::vec3(0.2f, 0.2f, 0.2f));
+			M = glm::scale(M, glm::vec3(0.3f, 0.3f, 0.3f));
 			M = glm::rotate(M, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
 			M = glm::rotate(M, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
 			M = glm::translate(M, glm::vec3(i * -2.0f, 0.0f, j * 2.0f));
@@ -437,7 +442,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
 
 		for (int i = 0; i < 4; i++) {
 			M = glm::mat4(1.0f);
-			M = glm::scale(M, glm::vec3(0.2f, 0.2f, 0.2f));
+			M = glm::scale(M, glm::vec3(0.3f, 0.3f, 0.3f));
 			M = glm::rotate(M, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
 			M = glm::rotate(M, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
 			M = glm::translate(M, glm::vec3(i * -2.0f, 0.0f, j * 2.0f + 1));

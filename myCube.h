@@ -272,50 +272,76 @@ float myCubeColors[]={
 				1.0f,1.0f, 1.0f,0.0f, 0.0f,0.0f,
 			};
 
+			//float myCubeTexCoords1[] = {
+			//	
+			//	0.0f, 0.0f, //A
+			//	0.0f, 1.0f, //B
+			//	1.0f, 0.0f, //C
+			//	1.0f, 1.0f, //D
+			//	0.0f, 1.0f,
+			//	1.0f, 0.0f, //A
+
+			//	
+			//};
 			float myCubeTexCoords1[] = {
-				
-				0.0f, 0.0f, //A
-				0.0f, 1.0f, //B
-				1.0f, 0.0f, //C
-				1.0f, 1.0f, //D
-				0.0f, 1.0f,
-				1.0f, 0.0f, //A
+				// Front face (pionowo)
+				0.0f, 0.0f,  // bottom-left
+				0.0f, 1.0f,  // top-left
+				1.0f, 0.0f,  // bottom-right
 
-				0.0f, 0.0f, //A
-				0.0f, 1.0f, //B
-				1.0f, 0.0f, //C
-				1.0f, 1.0f, //D
-				0.0f, 1.0f,
-				1.0f, 0.0f, //A
+				1.0f, 0.0f,  // bottom-right
+				0.0f, 1.0f,  // top-left
+				1.0f, 1.0f,  // top-right
 
-				0.0f, 0.0f, //A
-				0.0f, 1.0f, //B
-				1.0f, 0.0f, //C
-				1.0f, 1.0f, //D
-				0.0f, 1.0f,
-				1.0f, 0.0f, //A
+				// Back face (pionowo) — odwrócone poziomo, ale pionowo
+				1.0f, 0.0f,
+				1.0f, 1.0f,
+				0.0f, 0.0f,
 
-				0.0f, 0.0f, //A
-				0.0f, 1.0f, //B
-				1.0f, 0.0f, //C
-				1.0f, 1.0f, //D
+				0.0f, 0.0f,
+				1.0f, 1.0f,
 				0.0f, 1.0f,
-				1.0f, 0.0f, //A
 
-				0.0f, 0.0f, //A
-				0.0f, 1.0f, //B
-				1.0f, 0.0f, //C
-				1.0f, 1.0f, //D
+				// Left face (pionowo)
+				0.0f, 0.0f,
 				0.0f, 1.0f,
-				1.0f, 0.0f, //A
+				1.0f, 0.0f,
 
-				0.0f, 0.0f, //A
-				0.0f, 1.0f, //B
-				1.0f, 0.0f, //C
-				1.0f, 1.0f, //D
+				1.0f, 0.0f,
 				0.0f, 1.0f,
-				1.0f, 0.0f, //A
+				1.0f, 1.0f,
+
+				// Right face (pionowo)
+				0.0f, 0.0f,
+				0.0f, 1.0f,
+				1.0f, 0.0f,
+
+				1.0f, 0.0f,
+				0.0f, 1.0f,
+				1.0f, 1.0f,
+
+				// Top face (pionowo)
+				0.0f, 0.0f,
+				0.0f, 1.0f,
+				1.0f, 0.0f,
+
+				1.0f, 0.0f,
+				0.0f, 1.0f,
+				1.0f, 1.0f,
+
+				// Bottom face (pionowo)
+				0.0f, 0.0f,
+				0.0f, 1.0f,
+				1.0f, 0.0f,
+
+				1.0f, 0.0f,
+				0.0f, 1.0f,
+				1.0f, 1.0f
 			};
+
+
+
+
 
 				
 			float myCubeC1[] = {
