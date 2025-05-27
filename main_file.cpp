@@ -35,7 +35,11 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "myBoard.h"
 
 #include "Model.h"
+#define TINYOBJLOADER_IMPLEMENTATION
+#include "tiny_obj_loader.h"
 
+std::vector<float> vertices;
+std::vector<unsigned int> indices;
 
 float speed_x = 0;
 float speed_y = 0;
@@ -54,8 +58,6 @@ ShaderProgram* spTextured;
 
 
 //Odkomentuj, żeby rysować czajnik
-float* vertices = myTeapotVertices;
-float* normals = myTeapotVertexNormals;
 float* texCoords = myTeapotTexCoords;
 float* colors = myTeapotColors;
 int vertexCount = myTeapotVertexCount;
@@ -153,6 +155,50 @@ float boardBorderVertsLeft[] = {
 
 
 
+void loadModel(const std::string& path) {
+	tinyobj::attrib_t attrib;
+	std::vector<tinyobj::shape_t> shapes;
+	std::vector<tinyobj::material_t> materials;
+	std::string warn, err;
+
+	bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, path.c_str());
+	if (!warn.empty()) std::cout << "WARN: " << warn << std::endl;
+	if (!err.empty()) std::cerr << "ERR: " << err << std::endl;
+	if (!ret) throw std::runtime_error("Failed to load OBJ file!");
+
+	for (const auto& shape : shapes) {
+		for (const auto& index : shape.mesh.indices) {
+			int vi = index.vertex_index;
+			vertices.push_back(attrib.vertices[3 * vi + 0]);
+			vertices.push_back(attrib.vertices[3 * vi + 1]);
+			vertices.push_back(attrib.vertices[3 * vi + 2]);
+			indices.push_back(indices.size());
+		}
+	}
+}
+
+GLuint vao, vbo, ebo;
+
+void setupMesh() {
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo);
+	glGenBuffers(1, &ebo);
+
+	glBindVertexArray(vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glBindVertexArray(0);
+}
+
+
 void drawBoard(glm::mat4 M, glm::mat4 V, glm::mat4 P, float angle_x, float angle_y) {
 	spTextured->use();
 	glUniformMatrix4fv(spTextured->u("P"), 1, false, glm::value_ptr(P));
@@ -189,7 +235,6 @@ void drawBoard(glm::mat4 M, glm::mat4 V, glm::mat4 P, float angle_x, float angle
 			glUniform1i(spTextured->u("texSampler"), 0);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
-
 		for (int i = 0; i < 4; i++) {
 			M = glm::mat4(1.0f);
 			M = glm::scale(M, glm::vec3(0.3f, 0.3f, 0.3f));
@@ -212,6 +257,8 @@ void drawBoard(glm::mat4 M, glm::mat4 V, glm::mat4 P, float angle_x, float angle
 			glUniform1i(spTextured->u("texSampler"), 0);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
+		glBindVertexArray(vao);
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	}
 
 	glDisableVertexAttribArray(spTextured->a("vertex"));

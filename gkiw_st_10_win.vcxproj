@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="board.h" />
+    <ClInclude Include="..\..\..\Downloads\tiny_obj_loader.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="Mesh.h" />
@@ -34,6 +34,7 @@
     <ClCompile Include="main_file.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="PGN.cpp" />
     <ClCompile Include="shaderprogram.cpp" />
   </ItemGroup>
   <ItemGroup>
