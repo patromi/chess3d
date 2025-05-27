@@ -38,41 +38,80 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
 
-std::vector<float> vertices;
-std::vector<unsigned int> indices;
-
 float speed_x = 0;
 float speed_y = 0;
 float aspectRatio = 1;
-
 ShaderProgram* sp;
 ShaderProgram* spTextured;
-
-
-//Odkomentuj, żeby rysować kostkę
-//float* vertices = myCubeVertices;
-//float* normals = myCubeNormals;
-//float* texCoords = myCubeTexCoords;
-//float* colors = myCubeColors;
-//int vertexCount = myCubeVertexCount;
-
-
-//Odkomentuj, żeby rysować czajnik
 float* texCoords = myTeapotTexCoords;
 float* colors = myTeapotColors;
 int vertexCount = myTeapotVertexCount;
-
 GLuint tex0;
 GLuint tex1; //uchwyt na teksturę
+struct ChessPiece {
+	std::string name;       // np. "Pawn", "King"
+	glm::vec3 position;     // pozycja na planszy
+};
 
-Model engineModel;
+//std::vector<ChessPiece> whitePieces = {
+//	{"Rook",   {-8.3f, 1.2f, -11.5f}},
+//	{"Knight", {-1.0f, 1.2f, -7.0f}},
+//	{"Bishop", {-3.0f, 1.2f, -7.0f}},
+//	{"Queen",  {-1.0f, 1.2f, -7.0f}},
+//	{"King",   { 1.0f, 1.2f, -7.0f}},
+//	{"Bishop", { 3.0f, 1.2f, -7.0f}},
+//	{"Knight", { 5.0f, 1.2f, -7.0f}},
+//	{"Rook",   { 7.0f, 1.2f, -7.0f}},
+//	{"Pawn",   {-7.0f, 1.2f, -5.0f}}, {"Pawn", {-5.0f, 1.2f, -5.0f}},
+//	{"Pawn",   {-3.0f, 1.2f, -5.0f}}, {"Pawn", {-1.0f, 1.2f, -5.0f}},
+//	{"Pawn",   { 1.0f, 1.2f, -5.0f}}, {"Pawn", { 3.0f, 1.2f, -5.0f}},
+//	{"Pawn",   { 5.0f, 1.2f, -5.0f}}, {"Pawn", { 7.0f, 1.2f, -5.0f}},
+//};
+//std::vector<ChessPiece> blackPieces = {
+//	{"Rook",   {-8.3f, 1.2f, 3.3f}},
+//	{"Knight", {-5.0f, 1.2f, 7.0f}},
+//	{"Bishop", {-3.0f, 1.2f, 7.0f}},
+//	{"Queen",  {-1.0f, 1.2f, 7.0f}},
+//	{"King",   { 1.0f, 1.2f, 7.0f}},
+//	{"Bishop", { 3.0f, 1.2f, 7.0f}},
+//	{"Knight", { 5.0f, 1.2f, 7.0f}},
+//	{"Rook",   { 7.0f, 1.2f, 7.0f}},
+//	{"Pawn",   {-7.0f, 1.2f, 5.0f}}, {"Pawn", {-5.0f, 1.2f, 5.0f}},
+//	{"Pawn",   {-3.0f, 1.2f, 5.0f}}, {"Pawn", {-1.0f, 1.2f, 5.0f}},
+//	{"Pawn",   { 1.0f, 1.2f, 5.0f}}, {"Pawn", { 3.0f, 1.2f, 5.0f}},
+//	{"Pawn",   { 5.0f, 1.2f, 5.0f}}, {"Pawn", { 7.0f, 1.2f, 5.0f}},
+//};
 
+std::unordered_map<std::string, std::string> pieceMeshMap = {
+	{"Pawn", "pawn"},
+	{"Rook", "Cylinder"},       // rook.obj → ostatni mesh
+	{"Knight", "knight"},
+	{"Bishop", "BezierCircle_001"}, // jedyny mesh
+	{"Queen", "Cylinder"},      // queen.obj → mesh 4
+	{"King", "Cube_002"}        // king.obj → mesh 3
+};
+Model ChessModel;
+std::vector<ChessPiece> whitePieces;
+std::vector<ChessPiece> blackPieces;
+
+std::vector<std::string> rowOrder = {
+	"Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"
+};
+
+float startX = -8.3f;
+float deltaX = 2.09f;
+float pieceY = 1.2f;
+
+float whiteZ = -11.5f;
+float whitePawnZ = whiteZ + 2.2f;
+
+float blackZ = 11.5f-8.2f;
+float blackPawnZ = blackZ - 2.2f;
 
 GLuint readTexture(const char* filename) {
 	GLuint tex;
-	//Wczytanie do pamięci komputera
-	std::vector<unsigned char> image; //Alokuj wektor do wczytania obrazka
-	unsigned width, height; //Zmienne do których wczytamy wymiary obrazka
+	std::vector<unsigned char> image; 
+	unsigned width, height;
 	//Wczytaj obrazek
 	unsigned error = lodepng::decode(image, width, height, filename);
 	//Import do pamięci karty graficznej
@@ -129,7 +168,21 @@ void initOpenGLProgram(GLFWwindow* window) {
 	tex1 = readTexture("cell-1.png");
 
 
-	engineModel.loadModel("engine.obj");
+	ChessModel.loadModel("bishop.obj");
+	ChessModel.loadModel("pawn.obj");
+	ChessModel.loadModel("rook.obj");
+	ChessModel.loadModel("king.obj");
+	ChessModel.loadModel("queen.obj");
+	ChessModel.loadModel("knight.obj");
+
+	for (int i = 0; i < 8; ++i) {
+		float x = startX + i * deltaX;
+		whitePieces.push_back({ rowOrder[i], {x, pieceY, whiteZ} });
+		whitePieces.push_back({ "Pawn",      {x, pieceY, whitePawnZ} });
+
+		blackPieces.push_back({ rowOrder[i], {x, pieceY, blackZ} });
+		blackPieces.push_back({ "Pawn",      {x, pieceY, blackPawnZ} });
+	}
 }
 
 
@@ -152,51 +205,6 @@ float boardBorderVertsLeft[] = {
 	5.0f, 0.0f, -5.0f, 1.0f
 
 };
-
-
-
-void loadModel(const std::string& path) {
-	tinyobj::attrib_t attrib;
-	std::vector<tinyobj::shape_t> shapes;
-	std::vector<tinyobj::material_t> materials;
-	std::string warn, err;
-
-	bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, path.c_str());
-	if (!warn.empty()) std::cout << "WARN: " << warn << std::endl;
-	if (!err.empty()) std::cerr << "ERR: " << err << std::endl;
-	if (!ret) throw std::runtime_error("Failed to load OBJ file!");
-
-	for (const auto& shape : shapes) {
-		for (const auto& index : shape.mesh.indices) {
-			int vi = index.vertex_index;
-			vertices.push_back(attrib.vertices[3 * vi + 0]);
-			vertices.push_back(attrib.vertices[3 * vi + 1]);
-			vertices.push_back(attrib.vertices[3 * vi + 2]);
-			indices.push_back(indices.size());
-		}
-	}
-}
-
-GLuint vao, vbo, ebo;
-
-void setupMesh() {
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &ebo);
-
-	glBindVertexArray(vao);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glBindVertexArray(0);
-}
 
 
 void drawBoard(glm::mat4 M, glm::mat4 V, glm::mat4 P, float angle_x, float angle_y) {
@@ -257,13 +265,39 @@ void drawBoard(glm::mat4 M, glm::mat4 V, glm::mat4 P, float angle_x, float angle
 			glUniform1i(spTextured->u("texSampler"), 0);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
-		glBindVertexArray(vao);
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	}
 
 	glDisableVertexAttribArray(spTextured->a("vertex"));
 	glDisableVertexAttribArray(spTextured->a("texCoord"));
 
+	sp->use();
+	glUniformMatrix4fv(sp->u("P"), 1, false, glm::value_ptr(P));
+	glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(V));
+
+	for (const auto& piece : whitePieces) {
+		std::string meshName = pieceMeshMap[piece.name];  // znajdź mesh
+
+		glm::mat4 pieceModel = glm::mat4(1.0f);
+		pieceModel = glm::scale(pieceModel, glm::vec3(0.145f));
+		pieceModel = glm::rotate(pieceModel, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
+		pieceModel = glm::rotate(pieceModel, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
+		pieceModel = glm::translate(pieceModel, piece.position);
+
+		glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(pieceModel));
+		ChessModel.drawMeshByName(meshName, sp);
+	}
+	for (const auto& piece : blackPieces) {
+		std::string meshName = pieceMeshMap[piece.name];  // znajdź mesh
+
+		glm::mat4 pieceModel = glm::mat4(1.0f);
+		pieceModel = glm::scale(pieceModel, glm::vec3(0.145f));
+		pieceModel = glm::rotate(pieceModel, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
+		pieceModel = glm::rotate(pieceModel, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
+		pieceModel = glm::translate(pieceModel, piece.position);
+
+		glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(pieceModel));
+		ChessModel.drawMeshByName(meshName, sp);
+	}
 
 }
 
@@ -275,7 +309,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
 	M = glm::rotate(M, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
 	M = glm::rotate(M, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
 
-	glm::mat4 V = glm::lookAt(glm::vec3(0.0f, 3.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 V = glm::lookAt(glm::vec3(0.0f, 3.0f, -2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);
 
 	drawBoard(M, V, P, angle_x, angle_y);
