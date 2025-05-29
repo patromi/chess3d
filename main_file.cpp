@@ -1,22 +1,3 @@
-/*
-Niniejszy program jest wolnym oprogramowaniem; możesz go
-rozprowadzać dalej i / lub modyfikować na warunkach Powszechnej
-Licencji Publicznej GNU, wydanej przez Fundację Wolnego
-Oprogramowania - według wersji 2 tej Licencji lub(według twojego
-wyboru) którejś z późniejszych wersji.
-
-Niniejszy program rozpowszechniany jest z nadzieją, iż będzie on
-użyteczny - jednak BEZ JAKIEJKOLWIEK GWARANCJI, nawet domyślnej
-gwarancji PRZYDATNOŚCI HANDLOWEJ albo PRZYDATNOŚCI DO OKREŚLONYCH
-ZASTOSOWAŃ.W celu uzyskania bliższych informacji sięgnij do
-Powszechnej Licencji Publicznej GNU.
-
-Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz
-Powszechnej Licencji Publicznej GNU(GNU General Public License);
-jeśli nie - napisz do Free Software Foundation, Inc., 59 Temple
-Place, Fifth Floor, Boston, MA  02110 - 1301  USA
-*/
-
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_SWIZZLE
 
@@ -53,34 +34,6 @@ struct ChessPiece {
 	glm::vec3 position;     // pozycja na planszy
 };
 
-//std::vector<ChessPiece> whitePieces = {
-//	{"Rook",   {-8.3f, 1.2f, -11.5f}},
-//	{"Knight", {-1.0f, 1.2f, -7.0f}},
-//	{"Bishop", {-3.0f, 1.2f, -7.0f}},
-//	{"Queen",  {-1.0f, 1.2f, -7.0f}},
-//	{"King",   { 1.0f, 1.2f, -7.0f}},
-//	{"Bishop", { 3.0f, 1.2f, -7.0f}},
-//	{"Knight", { 5.0f, 1.2f, -7.0f}},
-//	{"Rook",   { 7.0f, 1.2f, -7.0f}},
-//	{"Pawn",   {-7.0f, 1.2f, -5.0f}}, {"Pawn", {-5.0f, 1.2f, -5.0f}},
-//	{"Pawn",   {-3.0f, 1.2f, -5.0f}}, {"Pawn", {-1.0f, 1.2f, -5.0f}},
-//	{"Pawn",   { 1.0f, 1.2f, -5.0f}}, {"Pawn", { 3.0f, 1.2f, -5.0f}},
-//	{"Pawn",   { 5.0f, 1.2f, -5.0f}}, {"Pawn", { 7.0f, 1.2f, -5.0f}},
-//};
-//std::vector<ChessPiece> blackPieces = {
-//	{"Rook",   {-8.3f, 1.2f, 3.3f}},
-//	{"Knight", {-5.0f, 1.2f, 7.0f}},
-//	{"Bishop", {-3.0f, 1.2f, 7.0f}},
-//	{"Queen",  {-1.0f, 1.2f, 7.0f}},
-//	{"King",   { 1.0f, 1.2f, 7.0f}},
-//	{"Bishop", { 3.0f, 1.2f, 7.0f}},
-//	{"Knight", { 5.0f, 1.2f, 7.0f}},
-//	{"Rook",   { 7.0f, 1.2f, 7.0f}},
-//	{"Pawn",   {-7.0f, 1.2f, 5.0f}}, {"Pawn", {-5.0f, 1.2f, 5.0f}},
-//	{"Pawn",   {-3.0f, 1.2f, 5.0f}}, {"Pawn", {-1.0f, 1.2f, 5.0f}},
-//	{"Pawn",   { 1.0f, 1.2f, 5.0f}}, {"Pawn", { 3.0f, 1.2f, 5.0f}},
-//	{"Pawn",   { 5.0f, 1.2f, 5.0f}}, {"Pawn", { 7.0f, 1.2f, 5.0f}},
-//};
 
 std::unordered_map<std::string, std::string> pieceMeshMap = {
 	{"Pawn", "pawn"},
@@ -98,19 +51,11 @@ std::vector<std::string> rowOrder = {
 	"Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"
 };
 
-float startX = -8.3f;
-float deltaX = 2.09f;
-float pieceY = 1.2f;
 
-float whiteZ = -11.5f;
-float whitePawnZ = whiteZ + 2.2f;
-
-float blackZ = 11.5f-8.2f;
-float blackPawnZ = blackZ - 2.2f;
 
 GLuint readTexture(const char* filename) {
 	GLuint tex;
-	std::vector<unsigned char> image; 
+	std::vector<unsigned char> image;
 	unsigned width, height;
 	//Wczytaj obrazek
 	unsigned error = lodepng::decode(image, width, height, filename);
@@ -159,7 +104,7 @@ void initOpenGLProgram(GLFWwindow* window) {
 	glEnable(GL_DEPTH_TEST);
 	glfwSetWindowSizeCallback(window, windowResizeCallback);
 	glfwSetKeyCallback(window, keyCallback);
-	
+
 	sp = new ShaderProgram("v_simplest.glsl", NULL, "f_simplest.glsl");
 	spTextured = new ShaderProgram("v_textured.glsl", NULL, "f_textured.glsl");
 	//sp = new ShaderProgram("v_constant.glsl", NULL, "f_constant.glsl");
@@ -175,13 +120,20 @@ void initOpenGLProgram(GLFWwindow* window) {
 	ChessModel.loadModel("queen.obj");
 	ChessModel.loadModel("knight.obj");
 
+	float boardStartX = -8.0f;
+	float boardStartZ = -11.0f;
+	float squareSize = 2.0f;
+	float pieceY = 1.2f; // może do korekty przy dużych figurach
 	for (int i = 0; i < 8; ++i) {
-		float x = startX + i * deltaX;
-		whitePieces.push_back({ rowOrder[i], {x, pieceY, whiteZ} });
-		whitePieces.push_back({ "Pawn",      {x, pieceY, whitePawnZ} });
+		float x = boardStartX + i * squareSize;
 
-		blackPieces.push_back({ rowOrder[i], {x, pieceY, blackZ} });
-		blackPieces.push_back({ "Pawn",      {x, pieceY, blackPawnZ} });
+		whitePieces.push_back({ rowOrder[i], {x, pieceY, boardStartZ} });
+
+		whitePieces.push_back({ "Pawn", {x, pieceY, boardStartZ + squareSize} });
+
+		blackPieces.push_back({ rowOrder[i], {x, pieceY, boardStartZ + squareSize * 7} });
+
+		blackPieces.push_back({ "Pawn", {x, pieceY, boardStartZ + squareSize * 6} });
 	}
 }
 
@@ -223,7 +175,7 @@ void drawBoard(glm::mat4 M, glm::mat4 V, glm::mat4 P, float angle_x, float angle
 		for (int i = 0; i < 4; i++) {
 			// Macierz i pozycjonowanie
 			M = glm::mat4(1.0f);
-			M = glm::scale(M, glm::vec3(0.3f, 0.3f, 0.3f));
+			M = glm::scale(M, glm::vec3(1.0f, 1.0f, 1.0f));
 			M = glm::rotate(M, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
 			M = glm::rotate(M, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
 			M = glm::translate(M, glm::vec3(i * -2.0f, 0.0f, j * 2.0f));
@@ -245,7 +197,8 @@ void drawBoard(glm::mat4 M, glm::mat4 V, glm::mat4 P, float angle_x, float angle
 		}
 		for (int i = 0; i < 4; i++) {
 			M = glm::mat4(1.0f);
-			M = glm::scale(M, glm::vec3(0.3f, 0.3f, 0.3f));
+			M = glm::scale(M, glm::vec3(1.0f, 1.0f, 1.0f));
+
 			M = glm::rotate(M, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
 			M = glm::rotate(M, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
 			M = glm::translate(M, glm::vec3(i * -2.0f, 0.0f, j * 2.0f + 1));
@@ -275,10 +228,10 @@ void drawBoard(glm::mat4 M, glm::mat4 V, glm::mat4 P, float angle_x, float angle
 	glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(V));
 
 	for (const auto& piece : whitePieces) {
-		std::string meshName = pieceMeshMap[piece.name];  // znajdź mesh
+		std::string meshName = pieceMeshMap[piece.name];
 
 		glm::mat4 pieceModel = glm::mat4(1.0f);
-		pieceModel = glm::scale(pieceModel, glm::vec3(0.145f));
+		pieceModel = glm::scale(pieceModel, glm::vec3(0.5f)); // ZWIĘKSZONO
 		pieceModel = glm::rotate(pieceModel, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
 		pieceModel = glm::rotate(pieceModel, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
 		pieceModel = glm::translate(pieceModel, piece.position);
@@ -286,11 +239,12 @@ void drawBoard(glm::mat4 M, glm::mat4 V, glm::mat4 P, float angle_x, float angle
 		glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(pieceModel));
 		ChessModel.drawMeshByName(meshName, sp);
 	}
+
 	for (const auto& piece : blackPieces) {
-		std::string meshName = pieceMeshMap[piece.name];  // znajdź mesh
+		std::string meshName = pieceMeshMap[piece.name];
 
 		glm::mat4 pieceModel = glm::mat4(1.0f);
-		pieceModel = glm::scale(pieceModel, glm::vec3(0.145f));
+		pieceModel = glm::scale(pieceModel, glm::vec3(0.5f)); // ZWIĘKSZONO
 		pieceModel = glm::rotate(pieceModel, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
 		pieceModel = glm::rotate(pieceModel, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
 		pieceModel = glm::translate(pieceModel, piece.position);
@@ -305,18 +259,22 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glm::mat4 M = glm::mat4(1.0f);
-	//M = glm::scale(M, glm::vec3(0.2f, 0.2f, 0.2f));
 	M = glm::rotate(M, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
 	M = glm::rotate(M, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
 
-	glm::mat4 V = glm::lookAt(glm::vec3(0.0f, 3.0f, -2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);
+	// 📍 Przesunięcie w prawo (x +1.5), oddalenie (y +1.0)
+	glm::vec3 cameraPos = glm::vec3(0.0f, 8.0f, 7.0f);      // wyżej + w prawo
+	glm::vec3 lookAt = glm::vec3(0.0f, 0.0f, -0.5f);     // patrz lekko w prawo i do tyłu
+	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);      // standardowe „do góry” (oś Y)
+
+	glm::mat4 V = glm::lookAt(cameraPos, lookAt, up);
+	glm::mat4 P = glm::perspective(glm::radians(60.0f), 1.0f, 1.0f, 50.0f);
 
 	drawBoard(M, V, P, angle_x, angle_y);
 
-
 	glfwSwapBuffers(window);
 }
+
 
 
 
