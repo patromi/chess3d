@@ -20,7 +20,7 @@ void setupChessPieces() {
     float boardStartX = -8.0f;
     float boardStartZ = -11.0f;
     float squareSize = 2.0f;
-    float pieceY = 1.2f;
+    float pieceY = 1.0f;
     for (int i = 0; i < 8; ++i) {
         float x = boardStartX + i * squareSize;
         whitePieces.push_back({ rowOrder[i], {x, pieceY, boardStartZ} });
