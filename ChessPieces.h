@@ -16,5 +16,9 @@ extern std::vector<ChessPiece> whitePieces;
 extern std::vector<ChessPiece> blackPieces;
 extern std::unordered_map<std::string, std::string> pieceMeshMap;
 extern Model ChessModel;
+extern bool flag;
+extern bool permission;
 
 void setupChessPieces();
+void updatePiecesFromBoard();
+void updatePiecesPositions();
