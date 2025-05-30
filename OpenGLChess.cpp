@@ -2,10 +2,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "constants.h"
 #include "lodepng.h"
-#include "myCube.h"
 #include <glm/gtc/type_ptr.hpp>
-#include "myTeapot.h"
-#include "myBoard.h"
+#include "BoardRenderer.h"
 
 extern float speed_x;
 extern float speed_y;
@@ -173,7 +171,7 @@ void drawBoard(glm::mat4 M, glm::mat4 V, glm::mat4 P, float angle_x, float angle
     drawAllPieces(blackPieces, angle_x, angle_y, sp, ChessModel, pieceMeshMap);
 }
 
-void drawScene(GLFWwindow* window,float angle_x, float angle_y) {
+void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glm::mat4 M = glm::mat4(1.0f);
@@ -187,7 +185,7 @@ void drawScene(GLFWwindow* window,float angle_x, float angle_y) {
     glm::mat4 V = glm::lookAt(cameraPos, lookAt, up);
     glm::mat4 P = glm::perspective(glm::radians(60.0f), 1.0f, 1.0f, 50.0f);
 
-    drawBoard(M, V, P, angle_x, angle_y);
+    drawBoard(M, V, P, angle_x, angle_y, sp, spTextured, tex0, tex1, whitePieces, blackPieces, pieceMeshMap, ChessModel);
 
     glfwSwapBuffers(window);
 }
