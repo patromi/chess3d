@@ -20,20 +20,26 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Downloads\tiny_obj_loader.h" />
+    <ClInclude Include="BoardRenderer.h" />
+    <ClInclude Include="ChessPieces.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="OpenGLChess.h" />
     <ClInclude Include="shaderprogram.h" />
     <ClInclude Include="myCube.h" />
     <ClInclude Include="myTeapot.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BoardRenderer.cpp" />
+    <ClCompile Include="ChessPieces.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="main_file.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="OpenGLChess.cpp" />
     <ClCompile Include="PGN.cpp" />
     <ClCompile Include="shaderprogram.cpp" />
   </ItemGroup>
