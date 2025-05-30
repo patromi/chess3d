@@ -3,10 +3,10 @@
 # File created: 05/27/2025 20:31:06
 
 mtllib material.lib
-g Cylinder
+g Queen
 
 #
-# object Cylinder
+# object Queen
 #
 
 v -0.8762607 1.7596362 0.8081854

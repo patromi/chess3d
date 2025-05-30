@@ -3,10 +3,10 @@
 # File created: 05/27/2025 20:40:28
 
 mtllib material.lib
-g Cylinder
+g Rook
 
 #
-# object Cylinder
+# object Rook
 #
 
 v 0.586556 0.16921191 -0.586556
