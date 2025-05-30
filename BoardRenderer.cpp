@@ -99,6 +99,8 @@ void drawBoard(
     glUniformMatrix4fv(sp->u("P"), 1, false, glm::value_ptr(P));
     glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(V));
 
+    updatePiecesPositions();
     drawAllPieces(whitePieces, angle_x, angle_y, sp, ChessModel, pieceMeshMap);
     drawAllPieces(blackPieces, angle_x, angle_y, sp, ChessModel, pieceMeshMap);
 }
+

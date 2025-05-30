@@ -97,18 +97,31 @@ void error_callback(int error, const char* description) {
     fputs(description, stderr);
 }
 
+bool d_was_pressed = false;
+
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_LEFT) speed_x = -PI / 2;
         if (key == GLFW_KEY_RIGHT) speed_x = PI / 2;
         if (key == GLFW_KEY_UP) speed_y = PI / 2;
         if (key == GLFW_KEY_DOWN) speed_y = -PI / 2;
+        if (key == GLFW_KEY_ESCAPE) {
+            glfwSetWindowShouldClose(window, true);
+        }
+
+        if (key == GLFW_KEY_D && !d_was_pressed) {
+            permission = true;         // Flaga ustawiona tylko raz
+            d_was_pressed = true;
+        }
     }
+
     if (action == GLFW_RELEASE) {
-        if (key == GLFW_KEY_LEFT) speed_x = 0;
-        if (key == GLFW_KEY_RIGHT) speed_x = 0;
-        if (key == GLFW_KEY_UP) speed_y = 0;
-        if (key == GLFW_KEY_DOWN) speed_y = 0;
+        if (key == GLFW_KEY_LEFT || key == GLFW_KEY_RIGHT) speed_x = 0;
+        if (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN) speed_y = 0;
+        if (key == GLFW_KEY_D) {
+            d_was_pressed = false;
+            permission = false;// Odblokuj kolejne kliknięcie
+        }
     }
 }
 

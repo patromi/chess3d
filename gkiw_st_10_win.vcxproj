@@ -27,6 +27,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="OpenGLChess.h" />
+    <ClInclude Include="PGN.h" />
     <ClInclude Include="shaderprogram.h" />
     <ClInclude Include="myCube.h" />
     <ClInclude Include="myTeapot.h" />
