@@ -9,6 +9,8 @@
 extern char board[8][8];
 std::vector<ChessPiece> whitePieces;
 std::vector<ChessPiece> blackPieces;
+std::vector<std::vector<ChessPiece>> whiteHistory;
+std::vector<std::vector<ChessPiece>> blackHistory;
 std::unordered_map<std::string, std::string> pieceMeshMap = {
     {"Pawn", "pawn"},
     {"Rook", "Rook"},
@@ -128,12 +130,16 @@ void saveCurrentBoardToHistory() {
         for (int j = 0; j < 8; ++j)
             snapshot[i][j] = board[i][j];
 
-    // Jeśli cofnęliśmy się w historii, ucinamy przyszłość
+    // Ucinanie przyszłości
     if (currentBoardIndex + 1 < (int)boardHistory.size()) {
         boardHistory.resize(currentBoardIndex + 1);
+        whiteHistory.resize(currentBoardIndex + 1);
+        blackHistory.resize(currentBoardIndex + 1);
     }
 
     boardHistory.push_back(snapshot);
+    whiteHistory.push_back(whitePieces);
+    blackHistory.push_back(blackPieces);
     currentBoardIndex++;
 }
 
@@ -143,9 +149,11 @@ void loadBoardFromHistory(int index) {
         for (int i = 0; i < 8; ++i)
             for (int j = 0; j < 8; ++j)
                 board[i][j] = snapshot[i][j];
+
+        whitePieces = whiteHistory[index];
+        blackPieces = blackHistory[index];
     }
 }
-
 void updatePiecesPositions() {
     // ⬅️ Ruch do tyłu
     if (!permission && back) {
@@ -193,6 +201,8 @@ void updatePiecesPositions() {
         initBoard();
         updatePiecesFromBoard();
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        whitePieces = whiteHistory[0];
+        blackPieces = blackHistory[0];
         currentBoardIndex = -1;
         reset = false;
 
@@ -204,12 +214,6 @@ void updatePiecesPositions() {
 
 
     
-    //for (auto& piece : whitePieces) {
-    //    piece.position.x += 0.01f; // Example movement logic
-    //}
-    //for (auto& piece : blackPieces) {
-    //    piece.position.x -= 0.01f; // Example movement logic
-    //}
 
 
 
