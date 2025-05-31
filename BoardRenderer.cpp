@@ -58,11 +58,21 @@ void drawChessBoard(float angle_x, float angle_y, ShaderProgram* spTextured, GLu
 
 void drawPiece(const ChessPiece& piece, float angle_x, float angle_y, ShaderProgram* sp, Model& ChessModel, const std::unordered_map<std::string, std::string>& pieceMeshMap) {
     std::string meshName = pieceMeshMap.at(piece.name);
+
     glm::mat4 pieceModel = getTransformedMatrix(0.5f, angle_x, angle_y, piece.position);
+
+    if (piece.name == "Knight") {
+        if (piece.color == "black") {
+            pieceModel = glm::rotate(pieceModel, glm::radians(270.0f), glm::vec3(0, 1, 0));
+        }
+        else {
+            pieceModel = glm::rotate(pieceModel, glm::radians(90.0f), glm::vec3(0, 1, 0));
+        }
+    }
+
     glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(pieceModel));
     ChessModel.drawMeshByName(meshName, sp);
 }
-
 void drawAllPieces(const std::vector<ChessPiece>& pieces, float angle_x, float angle_y, ShaderProgram* sp, Model& ChessModel, const std::unordered_map<std::string, std::string>& pieceMeshMap) {
     for (const auto& piece : pieces) {
         drawPiece(piece, angle_x, angle_y, sp, ChessModel, pieceMeshMap);
