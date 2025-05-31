@@ -1,4 +1,6 @@
-﻿#include "ChessPieces.h"
+﻿#include <array> // Make sure this is at the top!
+#include <vector>
+#include "ChessPieces.h"
 #include "PGN.h"
 #include <thread>
 #include <map> // Add this include to define std::map
@@ -113,17 +115,92 @@ void updatePiecesFromBoard() {
 }
 
 
-bool permission;
+bool permission = false;
+bool back = false;
+bool reset = false;
+extern char board[8][8];
+std::vector<std::array<std::array<char, 8>, 8>> boardHistory;
+int currentBoardIndex = -1;
+
+void saveCurrentBoardToHistory() {
+    std::array<std::array<char, 8>, 8> snapshot;
+    for (int i = 0; i < 8; ++i)
+        for (int j = 0; j < 8; ++j)
+            snapshot[i][j] = board[i][j];
+
+    // Jeśli cofnęliśmy się w historii, ucinamy przyszłość
+    if (currentBoardIndex + 1 < (int)boardHistory.size()) {
+        boardHistory.resize(currentBoardIndex + 1);
+    }
+
+    boardHistory.push_back(snapshot);
+    currentBoardIndex++;
+}
+
+void loadBoardFromHistory(int index) {
+    if (index >= 0 && index < (int)boardHistory.size()) {
+        const auto& snapshot = boardHistory[index];
+        for (int i = 0; i < 8; ++i)
+            for (int j = 0; j < 8; ++j)
+                board[i][j] = snapshot[i][j];
+    }
+}
 
 void updatePiecesPositions() {
-    if (permission == true) {
-        readPGN(permission);
+    // ⬅️ Ruch do tyłu
+    if (!permission && back) {
+        if (currentBoardIndex < 0) {
+            std::cout << "End of history, u cannot go more back.\n";
+            back = false;
+            return;
+        }
+        if (currentBoardIndex == 0) {
+            initBoard();
+            updatePiecesFromBoard();
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            currentBoardIndex--;
+
+
+            back = false;
+            return;
+        }
+        currentBoardIndex--;
+        loadBoardFromHistory(currentBoardIndex);
+        updatePiecesFromBoard();
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
-		updatePiecesFromBoard();
-        permission == false;
+        back = false;
+        return;
+    }
+
+    // ➡️ Nowy ruch do przodu
+    if (permission) {
+        // Jeśli mamy jeszcze historię do przodu – użyj jej
+        if (currentBoardIndex + 1 < (int)boardHistory.size()) {
+            currentBoardIndex++;
+            loadBoardFromHistory(currentBoardIndex);
+        }
+        else {
+            readPGN(permission);                 // wykonaj ruch
+            saveCurrentBoardToHistory();        // zapisz aktualny board
+        }
+
+        updatePiecesFromBoard();
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        permission = false;
+    }
+
+    if (reset == true) {
+        initBoard();
+        updatePiecesFromBoard();
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        currentBoardIndex = -1;
+        reset = false;
 
     }
 
+
+
+}
 
 
     
@@ -133,7 +210,6 @@ void updatePiecesPositions() {
     //for (auto& piece : blackPieces) {
     //    piece.position.x -= 0.01f; // Example movement logic
     //}
-}
 
 
 

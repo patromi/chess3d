@@ -18,7 +18,8 @@ extern std::unordered_map<std::string, std::string> pieceMeshMap;
 extern Model ChessModel;
 extern bool flag;
 extern bool permission;
-
+extern bool back;
+extern bool reset;
 void setupChessPieces();
 void updatePiecesFromBoard();
 void updatePiecesPositions();
