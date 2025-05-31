@@ -33,14 +33,26 @@ void setupChessPieces() {
     float boardStartZ = -11.0f;
     float squareSize = 2.0f;
     float pieceY = 1.0f;
+
     for (int i = 0; i < 8; ++i) {
         float x = boardStartX + i * squareSize;
-        whitePieces.push_back({ rowOrder[i], {x, pieceY, boardStartZ} });
-        whitePieces.push_back({ "Pawn", {x, pieceY, boardStartZ + squareSize} });
-        blackPieces.push_back({ rowOrder[i], {x, pieceY, boardStartZ + squareSize * 7} });
-        blackPieces.push_back({ "Pawn", {x, pieceY, boardStartZ + squareSize * 6} });
+        std::string pieceType = rowOrder[i];
+
+        float knightRotation = 0.0f;
+        if (pieceType == "Knight") {
+            knightRotation = 90.0f; // rotacja tylko konia
+        }
+
+        // Białe figury
+        whitePieces.push_back({ pieceType, {x, pieceY, boardStartZ}, knightRotation, "white" });
+        whitePieces.push_back({ "Pawn", {x, pieceY, boardStartZ + squareSize}, 0.0f, "white" });
+
+        // Czarne figury
+        blackPieces.push_back({ pieceType, {x, pieceY, boardStartZ + squareSize * 7}, knightRotation, "black" });
+        blackPieces.push_back({ "Pawn", {x, pieceY, boardStartZ + squareSize * 6}, 0.0f, "black" });
     }
-}
+   }
+
 
 void updatePiecesFromBoard() {
     std::map<char, std::string> pieceMap = {
