@@ -22,7 +22,7 @@ std::unordered_map<std::string, std::string> pieceMeshMap = {
 Model ChessModel;
 
 std::vector<std::string> rowOrder = {
-    "Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"
+    "Rook", "Knight", "Bishop", "Queen",  "King","Bishop", "Knight", "Rook"
 };
 
 
@@ -44,12 +44,12 @@ void setupChessPieces() {
         }
 
         // Białe figury
-        whitePieces.push_back({ pieceType, {x, pieceY, boardStartZ}, knightRotation, "white" });
-        whitePieces.push_back({ "Pawn", {x, pieceY, boardStartZ + squareSize}, 0.0f, "white" });
+        blackPieces.push_back({ pieceType, {x, pieceY, boardStartZ}, knightRotation, "black" });
+        blackPieces.push_back({ "Pawn", {x, pieceY, boardStartZ + squareSize}, 0.0f, "black" });
 
         // Czarne figury
-        blackPieces.push_back({ pieceType, {x, pieceY, boardStartZ + squareSize * 7}, knightRotation, "black" });
-        blackPieces.push_back({ "Pawn", {x, pieceY, boardStartZ + squareSize * 6}, 0.0f, "black" });
+        whitePieces.push_back({ pieceType, {x, pieceY, boardStartZ + squareSize * 7}, knightRotation, "white" });
+        whitePieces.push_back({ "Pawn", {x, pieceY, boardStartZ + squareSize * 6}, 0.0f, "white" });
     }
    }
 
@@ -88,7 +88,7 @@ void updatePiecesFromBoard() {
             std::string type = pieceMap[symbol];
 
             float x = boardStartX + col * squareSize;
-            float z = boardStartZ + (7 - row) * squareSize;
+            float z = boardStartZ + row * squareSize;
             glm::vec3 newPos = glm::vec3(x, pieceY, z);
 
             auto& pieces = isWhite ? whitePieces : blackPieces;
