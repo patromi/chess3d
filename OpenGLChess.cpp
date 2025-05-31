@@ -98,7 +98,8 @@ void error_callback(int error, const char* description) {
 }
 
 bool d_was_pressed = false;
-
+bool a_was_pressed = false;
+bool r_was_pressed = false;
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_LEFT) speed_x = -PI / 2;
@@ -113,6 +114,16 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
             permission = true;         // Flaga ustawiona tylko raz
             d_was_pressed = true;
         }
+        if (key == GLFW_KEY_A && !a_was_pressed) {
+            back = true;         // Flaga ustawiona tylko raz
+            a_was_pressed = true;
+        }
+        if (key == GLFW_KEY_R && !r_was_pressed) {
+            reset = true;         // Flaga ustawiona tylko raz
+            r_was_pressed = true;
+        }
+
+
     }
 
     if (action == GLFW_RELEASE) {
@@ -121,6 +132,14 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         if (key == GLFW_KEY_D) {
             d_was_pressed = false;
             permission = false;// Odblokuj kolejne kliknięcie
+        }
+        if (key == GLFW_KEY_A) {
+            a_was_pressed = false;
+            back = false;// Odblokuj kolejne kliknięcie
+        }
+        if (key == GLFW_KEY_R) {
+            r_was_pressed = false;
+            reset = false;// Odblokuj kolejne kliknięcie
         }
     }
 }
