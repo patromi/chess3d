@@ -1,4 +1,4 @@
-#include "BoardRenderer.h"
+﻿#include "BoardRenderer.h"
 #include <glm/gtc/type_ptr.hpp>
 #include "myCube.h"
 #include "myTeapot.h"
@@ -70,9 +70,20 @@ void drawPiece(const ChessPiece& piece, float angle_x, float angle_y, ShaderProg
         }
     }
 
+    glm::vec3 color;
+    if (piece.color == "white") {
+        color = glm::vec3(1.0f, 1.0f, 1.0f);
+    }
+    else {
+        color = glm::vec3(0.1f, 0.1f, 0.1f); 
+    }
+
     glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(pieceModel));
+    glUniform3fv(sp->u("pieceColor"), 1, glm::value_ptr(color));
+
     ChessModel.drawMeshByName(meshName, sp);
 }
+
 void drawAllPieces(const std::vector<ChessPiece>& pieces, float angle_x, float angle_y, ShaderProgram* sp, Model& ChessModel, const std::unordered_map<std::string, std::string>& pieceMeshMap) {
     for (const auto& piece : pieces) {
         drawPiece(piece, angle_x, angle_y, sp, ChessModel, pieceMeshMap);
