@@ -210,7 +210,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
     M = glm::rotate(M, angle_x, glm::vec3(0.0f, 1.0f, 0.0f));
     M = glm::rotate(M, angle_y, glm::vec3(1.0f, 0.0f, 0.0f));
 
-    glm::vec3 cameraPos = glm::vec3(0.0f, 8.0f, -10.0f);
+    glm::vec3 cameraPos = glm::vec3(0.0f, 8.0f, 6.0f);
     glm::vec3 lookAt = glm::vec3(0.0f, 0.0f, -0.5f);
     glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 
