@@ -8,6 +8,11 @@
 struct ChessPiece {
     std::string name;
     glm::vec3 position;
+    float rotation = 0.0f;  
+    std::string color;
+
+    ChessPiece(const std::string& name, const glm::vec3& position, float rotation, const std::string& color)
+        : name(name), position(position), rotation(rotation), color(color) {}
 };
 
 extern float angle_x;
