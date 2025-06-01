@@ -36,7 +36,7 @@ void main(void) {
     vec3 fresnelEffect = vec3(1.0) * fresnel * 0.05;
 
     // Mieszanie koloru figury z teksturą (subtelne)
-    float mixFactor = 0.95; // stała wartość – lepsza kontrola
+    float mixFactor = 0.8; // stała wartość – lepsza kontrola
     vec3 mixedColor = mix(baseColor, pieceColor, mixFactor);
 
     // Finalny kolor
