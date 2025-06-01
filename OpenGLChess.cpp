@@ -61,11 +61,7 @@ namespace {
     void drawPiece(const ChessPiece& piece, float angle_x, float angle_y, ShaderProgram* sp, Model& ChessModel, const std::unordered_map<std::string, std::string>& pieceMeshMap) {
         std::string meshName = pieceMeshMap.at(piece.name);
         glm::mat4 pieceModel = glm::mat4(1.0f);
-        pieceModel = glm::scale(pieceModel, glm::vec3(0.5f));
-        pieceModel = glm::rotate(pieceModel, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
-        pieceModel = glm::rotate(pieceModel, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
-        pieceModel = glm::translate(pieceModel, piece.position);
-
+        
         glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(pieceModel));
         ChessModel.drawMeshByName(meshName, sp);
     }

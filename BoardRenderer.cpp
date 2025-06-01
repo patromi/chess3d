@@ -60,9 +60,10 @@ void drawPiece(const ChessPiece& piece, float angle_x, float angle_y, ShaderProg
     std::string meshName = pieceMeshMap.at(piece.name);
 
     glm::mat4 pieceModel = getTransformedMatrix(0.5f, angle_x, angle_y, piece.position);
+	pieceModel = glm::scale(pieceModel, glm::vec3(0.9f));
 
     if (piece.name == "Knight") {
-        if (piece.color == "black") {
+        if (piece.color == "white") {
             pieceModel = glm::rotate(pieceModel, glm::radians(270.0f), glm::vec3(0, 1, 0));
         }
         else {
