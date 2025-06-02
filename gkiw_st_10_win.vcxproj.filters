@@ -109,5 +109,11 @@
     <None Include="v_simplest1.glsl">
       <Filter>Pliki zasobów</Filter>
     </None>
+    <None Include="f_simplest2.glsl">
+      <Filter>Pliki zasobów</Filter>
+    </None>
+    <None Include="v_simplest2.glsl">
+      <Filter>Pliki zasobów</Filter>
+    </None>
   </ItemGroup>
 </Project>
