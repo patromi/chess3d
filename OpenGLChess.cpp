@@ -98,7 +98,7 @@ void initOpenGLProgram(GLFWwindow* window) {
     glfwSetWindowSizeCallback(window, windowResizeCallback);
     glfwSetKeyCallback(window, keyCallback);
 
-    sp = new ShaderProgram("v_simplest.glsl", NULL, "f_simplest.glsl");
+    sp = new ShaderProgram("v_simplest1.glsl", NULL, "f_simplest1.glsl");
     spTextured = new ShaderProgram("v_simplest1.glsl", NULL, "f_simplest1.glsl");
 
     tex0 = readTexture("cell-0.png");

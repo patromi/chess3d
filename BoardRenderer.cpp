@@ -56,7 +56,7 @@ void drawChessBoard(float angle_x, float angle_y, ShaderProgram* spTextured, GLu
     }
 }
 
-void drawPiece(const ChessPiece& piece, float angle_x, float angle_y, ShaderProgram* sp, Model& ChessModel, const std::unordered_map<std::string, std::string>& pieceMeshMap) {
+void drawPiece(const ChessPiece& piece, float angle_x, float angle_y, ShaderProgram* sp, Model& ChessModel, const std::unordered_map<std::string, std::string>& pieceMeshMap, GLuint tex0, GLuint tex1) {
     std::string meshName = pieceMeshMap.at(piece.name);
 
     glm::mat4 pieceModel = getTransformedMatrix(0.5f, angle_x, angle_y, piece.position);
@@ -71,23 +71,27 @@ void drawPiece(const ChessPiece& piece, float angle_x, float angle_y, ShaderProg
         }
     }
 
-    glm::vec3 color;
+    
     if (piece.color == "white") {
-        color = glm::vec3(1.0f, 1.0f, 1.0f);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, tex1);
+        glUniform1i(sp->u("textureMap0"), 0);
     }
     else {
-        color = glm::vec3(0.1f, 0.1f, 0.1f); 
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, tex0);
+        glUniform1i(sp->u("textureMap0"), 0);
     }
 
     glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(pieceModel));
-    glUniform3fv(sp->u("pieceColor"), 1, glm::value_ptr(color));
+    glUniform1i(sp->u("textureMap0"), 0);
 
     ChessModel.drawMeshByName(meshName, sp);
 }
 
-void drawAllPieces(const std::vector<ChessPiece>& pieces, float angle_x, float angle_y, ShaderProgram* sp, Model& ChessModel, const std::unordered_map<std::string, std::string>& pieceMeshMap) {
+void drawAllPieces(const std::vector<ChessPiece>& pieces, float angle_x, float angle_y, ShaderProgram* sp, Model& ChessModel, const std::unordered_map<std::string, std::string>& pieceMeshMap, GLuint tex0, GLuint tex1) {
     for (const auto& piece : pieces) {
-        drawPiece(piece, angle_x, angle_y, sp, ChessModel, pieceMeshMap);
+        drawPiece(piece, angle_x, angle_y, sp, ChessModel, pieceMeshMap, tex0, tex1);
     }
 }
 
@@ -122,7 +126,7 @@ void drawBoard(
     glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(V));
 
     updatePiecesPositions();
-    drawAllPieces(whitePieces, angle_x, angle_y, sp, ChessModel, pieceMeshMap);
-    drawAllPieces(blackPieces, angle_x, angle_y, sp, ChessModel, pieceMeshMap);
+    drawAllPieces(whitePieces, angle_x, angle_y, sp, ChessModel, pieceMeshMap, tex0, tex1);
+    drawAllPieces(blackPieces, angle_x, angle_y, sp, ChessModel, pieceMeshMap, tex0, tex1);
 }
 

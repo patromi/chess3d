@@ -20,6 +20,12 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>&
 		this->normalsData[i * 4 + 3] = vertices[i].normal.w;
 	}
 
+	this->texCoordsData = new float[vertexCount * 2];
+	for (size_t i = 0; i < vertexCount; ++i) {
+		this->texCoordsData[i * 2] = vertices[i].texCoords.x;
+		this->texCoordsData[i * 2 + 1] = vertices[i].texCoords.y;
+	}
+
 	this->indexesCount = indices.size();
 	this->indexesData = new unsigned int[indexesCount];
 	for (size_t i = 0; i < indexesCount; ++i) {
@@ -27,6 +33,7 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>&
 	}
 
 }
+
 
 void Mesh::draw(ShaderProgram* sp) const {
 
@@ -36,11 +43,15 @@ void Mesh::draw(ShaderProgram* sp) const {
 	glEnableVertexAttribArray(sp->a("normal"));  //W³¹cz przesy³anie danych do atrybutu normal
 	glVertexAttribPointer(sp->a("normal"), 4, GL_FLOAT, false, 0, this->normalsData);
 
+	glEnableVertexAttribArray(sp->a("texCoord0")); // <-- np. atrybut tekstury
+	glVertexAttribPointer(sp->a("texCoord0"), 2, GL_FLOAT, false, 0, this->texCoordsData);
+
 	glDrawElements(GL_TRIANGLES, this->indexesCount, GL_UNSIGNED_INT, this->indexesData);
 	//glDrawArrays(GL_TRIANGLES, 0, this->vertexCount); //Narysuj obiekt
 
 	glDisableVertexAttribArray(sp->a("vertex"));  //Wy³¹cz przesy³anie danych do atrybutu vertex
 	glDisableVertexAttribArray(sp->a("normal"));  //Wy³¹cz przesy³anie danych do atrybutu normal
+	glDisableVertexAttribArray(sp->a("texCoord0")); //Wy³¹cz przesy³anie danych do atrybutu tekstury
 
 }
 

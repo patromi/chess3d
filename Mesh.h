@@ -18,6 +18,7 @@ private:
 	int vertexCount = 0; // Number of vertices
 	float* verticesData = nullptr; // Pointer to vertex data, if needed
 	float* normalsData = nullptr; // Pointer to normal data, if needed
+	float* texCoordsData = nullptr; // Pointer to texture coordinates data, if needed
 
 	int indexesCount = 0; // Number of indices
 	unsigned int* indexesData = nullptr; // Pointer to index data, if needed

@@ -72,6 +72,16 @@ Mesh Model::processMesh(aiMesh* mesh) {
 			1.0f
 		};
 
+		if (mesh->HasTextureCoords(0)) {
+			vertex.texCoords = glm::vec2(
+				mesh->mTextureCoords[0][i].x,
+				mesh->mTextureCoords[0][i].y
+			);
+		}
+		else {
+			vertex.texCoords = glm::vec2(0.0f, 0.0f);
+		}
+
 		vertex.normal = mesh->HasNormals() ?
 			glm::vec4(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z, 0.0f) :
 			glm::vec4(0.0f);
