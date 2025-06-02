@@ -1,4 +1,6 @@
 #include "OpenGLChess.h"
+#include <iostream>
+
 float speed_x = 0;
 float speed_y = 0;
 
@@ -13,8 +15,9 @@ int main(void)
         exit(EXIT_FAILURE);
     }
 
-    window = glfwCreateWindow(900, 900, "OpenGL", NULL, NULL);
+    glfwWindowHint(GLFW_SAMPLES, 8); 
 
+    window = glfwCreateWindow(900, 900, "OpenGL", NULL, NULL);
     if (!window) {
         fprintf(stderr, "Nie można utworzyć okna.\n");
         glfwTerminate();
@@ -28,6 +31,12 @@ int main(void)
         fprintf(stderr, "Nie można zainicjować GLEW.\n");
         exit(EXIT_FAILURE);
     }
+
+    glEnable(GL_MULTISAMPLE);
+
+    int samples;
+    glGetIntegerv(GL_SAMPLES, &samples);
+    std::cout << "MSAA Samples: " << samples << std::endl;
 
     initOpenGLProgram(window);
 
@@ -43,7 +52,6 @@ int main(void)
     }
 
     freeOpenGLProgram(window);
-
     glfwDestroyWindow(window);
     glfwTerminate();
     exit(EXIT_SUCCESS);

@@ -25,13 +25,33 @@ GLuint readTexture(const char* filename) {
     GLuint tex;
     std::vector<unsigned char> image;
     unsigned width, height;
+
     unsigned error = lodepng::decode(image, width, height, filename);
+    if (error) {
+        std::cerr << "Texture loading error (" << filename << "): " << lodepng_error_text(error) << std::endl;
+        return 0;
+    }
+
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
-    glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0,
-        GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*)image.data());
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, image.data());
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    GLfloat maxAniso = 0.0f;
+    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniso);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAniso);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
     return tex;
 }
 
@@ -103,6 +123,8 @@ void initOpenGLProgram(GLFWwindow* window) {
 
     tex0 = readTexture("cell-0.png");
     tex1 = readTexture("cell-1.png");
+   
+
 
     ChessModel.loadModel("bishop.obj");
     ChessModel.loadModel("pawn.obj");
