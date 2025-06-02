@@ -11,13 +11,13 @@ void setBoardAttributes(ShaderProgram* spTextured) {
     glEnableVertexAttribArray(spTextured->a("vertex"));
     glVertexAttribPointer(spTextured->a("vertex"), 4, GL_FLOAT, false, 0, boardVerts);
 
-    glEnableVertexAttribArray(spTextured->a("texCoord"));
-    glVertexAttribPointer(spTextured->a("texCoord"), 2, GL_FLOAT, false, 0, myBoardTexCoords);
+    glEnableVertexAttribArray(spTextured->a("texCoord0"));
+    glVertexAttribPointer(spTextured->a("texCoord0"), 2, GL_FLOAT, false, 0, myBoardTexCoords);
 }
 
 void unsetBoardAttributes(ShaderProgram* spTextured) {
     glDisableVertexAttribArray(spTextured->a("vertex"));
-    glDisableVertexAttribArray(spTextured->a("texCoord"));
+    glDisableVertexAttribArray(spTextured->a("texCoord0"));
 }
 
 glm::mat4 getTransformedMatrix(float scale, float angle_x, float angle_y, glm::vec3 translate) {
@@ -33,7 +33,7 @@ void drawBoardSquare(const glm::mat4& M, GLuint texture, ShaderProgram* spTextur
     glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(M));
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glUniform1i(spTextured->u("texSampler"), 0);
+    glUniform1i(spTextured->u("textureMap0"), 0);
     glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
