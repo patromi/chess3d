@@ -122,9 +122,9 @@ void initOpenGLProgram(GLFWwindow* window) {
     sp = new ShaderProgram("v_simplest2.glsl", NULL, "f_simplest2.glsl"); // uzywany do rysowania pionkow
 	spTextured = new ShaderProgram("v_simplest1.glsl", NULL, "f_simplest1.glsl"); // uzywany do rysowania planszy
 
-    tex0 = readTexture("cell-0.png");
-    tex1 = readTexture("cell-1.png");
-    tex2 = readTexture("bricks.png");
+    tex0 = readTexture("texture/cell-0.png");
+    tex1 = readTexture("texture/cell-1.png");
+    tex2 = readTexture("texture/cell_S.png");
    
 
 
