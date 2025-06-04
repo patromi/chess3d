@@ -1,15 +1,17 @@
 #version 330
 uniform sampler2D textureMap0;
+uniform sampler2D textureMap1;
 
+out vec4 pixelColor;
 
-out vec4 pixelColor; //Zmienna wyjsciowa fragment shadera. Zapisuje sie do niej ostateczny (prawie) kolor piksela
-
-in vec2 iTexCoord0; //Współrzędne tekstury
+in vec2 iTexCoord0;
 
 void main(void) {
 
 
-	vec4 texColor = texture(textureMap0, iTexCoord0); //Pobranie koloru z tekstury
+	vec4 texColor0 = texture(textureMap0, iTexCoord0);
+	
+	vec4 texColor1 = texture(textureMap1, iTexCoord0);
 
-	pixelColor= mix(texColor, vec4(0.2,0.3, 0.4, 1),0.3); //Zapisanie koloru do zmiennej wyjściowej
+	pixelColor= mix(texColor0,texColor1, 0.8);
 }

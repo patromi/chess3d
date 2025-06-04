@@ -74,17 +74,27 @@ void drawPiece(const ChessPiece& piece, float angle_x, float angle_y, ShaderProg
     
     if (piece.color == "white") {
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, tex1);
+        glBindTexture(GL_TEXTURE_2D, tex0);
         glUniform1i(sp->u("textureMap0"), 0);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, tex1);
+        glUniform1i(sp->u("textureMap1"), 0);
     }
     else {
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, tex0);
+        glBindTexture(GL_TEXTURE_2D, tex1);
         glUniform1i(sp->u("textureMap0"), 0);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, tex0);
+        glUniform1i(sp->u("textureMap1"), 0);
     }
 
     glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(pieceModel));
     glUniform1i(sp->u("textureMap0"), 0);
+
+	glUniform1i(sp->u("textureMap1"), 1);
 
     ChessModel.drawMeshByName(meshName, sp);
 }

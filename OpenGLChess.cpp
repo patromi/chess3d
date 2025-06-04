@@ -12,6 +12,7 @@ ShaderProgram* sp;
 ShaderProgram* spTextured;
 GLuint tex0;
 GLuint tex1;
+GLuint tex2;
 
 extern std::vector<ChessPiece> whitePieces;
 extern std::vector<ChessPiece> blackPieces;
@@ -123,6 +124,7 @@ void initOpenGLProgram(GLFWwindow* window) {
 
     tex0 = readTexture("cell-0.png");
     tex1 = readTexture("cell-1.png");
+    tex2 = readTexture("bricks.png");
    
 
 
@@ -148,8 +150,8 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
     M = glm::rotate(M, angle_x, glm::vec3(0.0f, 1.0f, 0.0f));
     M = glm::rotate(M, angle_y, glm::vec3(1.0f, 0.0f, 0.0f));
 
-    glm::vec3 cameraPos = glm::vec3(0.0f, 8.0f, 6.0f);
-    glm::vec3 lookAt = glm::vec3(0.0f, 0.0f, -0.5f);
+    glm::vec3 cameraPos = glm::vec3(0.0f, 8.0f, 7.0f);
+    glm::vec3 lookAt = glm::vec3(0.0f, 0.0f, -3.5f);
     glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 
     glm::mat4 V = glm::lookAt(cameraPos, lookAt, up);
