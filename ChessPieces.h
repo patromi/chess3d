@@ -10,6 +10,7 @@ struct ChessPiece {
     glm::vec3 position;
     float rotation = 0.0f;  
     std::string color;
+	bool is_moved = false;  // Indicates if the piece has been moved
 
     ChessPiece(const std::string& name, const glm::vec3& position, float rotation, const std::string& color)
         : name(name), position(position), rotation(rotation), color(color) {}

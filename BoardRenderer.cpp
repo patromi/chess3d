@@ -91,6 +91,9 @@ void drawPiece(const ChessPiece& piece, float angle_x, float angle_y, ShaderProg
         glUniform1i(sp->u("textureMap1"), 0);
     }
 
+    glUniform1i(sp->u("isMoved"), piece.is_moved ? 1 : 0);
+
+
     glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(pieceModel));
     glUniform1i(sp->u("textureMap0"), 0);
 

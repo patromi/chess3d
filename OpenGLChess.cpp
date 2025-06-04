@@ -63,6 +63,7 @@ void error_callback(int error, const char* description) {
 bool d_was_pressed = false;
 bool a_was_pressed = false;
 bool r_was_pressed = false;
+int cameraMode = 0; // 0 - normal, 1 - top-down, 2 - first-person
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_LEFT) speed_x = -PI / 2;
@@ -84,6 +85,16 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         if (key == GLFW_KEY_R && !r_was_pressed) {
             reset = true;         // Flaga ustawiona tylko raz
             r_was_pressed = true;
+        }
+        if (key == GLFW_KEY_B){
+			std::cout << cameraMode << std::endl;
+            cameraMode = 0;         // Flaga ustawiona tylko raz
+        }
+        if (key == GLFW_KEY_N) {
+            cameraMode = 1;         // Flaga ustawiona tylko raz
+        }
+        if (key == GLFW_KEY_M) {
+            cameraMode = 2;         // Flaga ustawiona tylko raz
         }
 
 
@@ -141,23 +152,50 @@ void initOpenGLProgram(GLFWwindow* window) {
 void freeOpenGLProgram(GLFWwindow* window) {
     delete sp;
 }
-
+#include <iomanip> // dodaj na górze pliku
 
 void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glm::mat4 M = glm::mat4(1.0f);
-    M = glm::rotate(M, angle_x, glm::vec3(0.0f, 1.0f, 0.0f));
-    M = glm::rotate(M, angle_y, glm::vec3(1.0f, 0.0f, 0.0f));
 
-    glm::vec3 cameraPos = glm::vec3(0.0f, 8.0f, 7.0f);
-    glm::vec3 lookAt = glm::vec3(0.0f, 0.0f, -3.5f);
+    glm::vec3 cameraPos;
+    glm::vec3 lookAt = glm::vec3(0.0f, 0.0f, 0.0f); // domyślnie patrzymy na środek planszy
     glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+   
+    float fov = 45.0f; // bardziej oddalony, ale naturalny
 
+    glm::vec3 center = glm::vec3(0.0f, 0.0f, 0.0f); // lub np. (3.5f, 0.0f, 3.5f)
+
+    if (cameraMode == 0) {
+        glm::vec3 center = glm::vec3(-1.0f, 0.0f, -4.0f); // lub np. (3.5f, 0.0f, 3.5f)
+        cameraPos = center + glm::vec3(0.0f, 10.0f, 13.0f);
+        lookAt = center;
+
+    }
+    else if (cameraMode == 1) {
+        cameraPos = center + glm::vec3(0.0f, 10.0f, -13.0f);
+        lookAt = center;
+    }
+    else if (cameraMode == 2) {
+        cameraPos = center + glm::vec3(0.0f, 20.0f, 0.001f); // nie używaj Z = 0
+        lookAt = center;
+        up = glm::vec3(0.0f, 0.0f, -1.0f);
+        fov = 35.0f;
+    }
+    // Oblicz rozdzielczość okna dla poprawnego aspect ratio
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    float aspect = (float)width / (float)height;
+    static int frameCounter = 0;
+    frameCounter++;
+  
     glm::mat4 V = glm::lookAt(cameraPos, lookAt, up);
-    glm::mat4 P = glm::perspective(glm::radians(60.0f), 1.0f, 1.0f, 50.0f);
+    glm::mat4 P = glm::perspective(glm::radians(fov), aspect, 0.1f, 100.0f);
 
-    drawBoard(M, V, P, angle_x, angle_y, sp, spTextured, tex0, tex1, tex2, whitePieces, blackPieces, pieceMeshMap, ChessModel);
+    drawBoard(M, V, P, angle_x, angle_y, sp, spTextured, tex0, tex1,tex2,
+        whitePieces, blackPieces, pieceMeshMap, ChessModel);
 
     glfwSwapBuffers(window);
 }

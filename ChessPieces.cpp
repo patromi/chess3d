@@ -53,7 +53,13 @@ void setupChessPieces() {
     }
    }
 
+char previousBoard[8][8];
 
+void savePreviousBoardSnapshot() {
+    for (int i = 0; i < 8; ++i)
+        for (int j = 0; j < 8; ++j)
+            previousBoard[i][j] = board[i][j];
+}
 void updatePiecesFromBoard() {
     std::map<char, std::string> pieceMap = {
         {'K', "King"}, {'Q', "Queen"}, {'R', "Rook"},
@@ -79,6 +85,23 @@ void updatePiecesFromBoard() {
         return -1;
         };
 
+    for (auto& p : whitePieces) p.is_moved = false;
+    for (auto& p : blackPieces) p.is_moved = false;
+
+    int lastMovedRow = -1, lastMovedCol = -1;
+    for (int row = 0; row < 8; ++row) {
+        for (int col = 0; col < 8; ++col) {
+            if (previousBoard[row][col] != board[row][col]) {
+                if (board[row][col] != '.' && previousBoard[row][col] == '.') {
+                    lastMovedRow = row;
+                    lastMovedCol = col;
+                    break;
+                }
+            }
+        }
+        if (lastMovedRow != -1) break;
+    }
+
     for (int row = 0; row < 8; ++row) {
         for (int col = 0; col < 8; ++col) {
             char symbol = board[row][col];
@@ -96,17 +119,20 @@ void updatePiecesFromBoard() {
             auto& enemyPieces = isWhite ? blackPieces : whitePieces;
             auto& enemyUsed = isWhite ? blackUsed : whiteUsed;
 
-            // Obsługa bicia – sprawdź, czy na pozycji jest figura przeciwnika
             int enemyIndex = getPieceAt(enemyPieces, newPos);
             if (enemyIndex != -1) {
                 enemyPieces.erase(enemyPieces.begin() + enemyIndex);
                 enemyUsed.erase(enemyUsed.begin() + enemyIndex);
             }
 
-            // Znajdź figurę tego typu która jeszcze nie została użyta
             for (size_t i = 0; i < pieces.size(); ++i) {
                 if (!usedFlags[i] && pieces[i].name == type) {
                     pieces[i].position = newPos;
+
+                    if (row == lastMovedRow && col == lastMovedCol) {
+                        pieces[i].is_moved = true;
+                    }
+
                     usedFlags[i] = true;
                     break;
                 }
@@ -114,7 +140,7 @@ void updatePiecesFromBoard() {
         }
     }
 
-    // Opcjonalnie: usuń niewykorzystane figury (czyli te, które zniknęły z planszy)
+    // Usuń niewykorzystane figury
     auto cleanUnused = [](std::vector<ChessPiece>& pieces, std::vector<bool>& used) {
         for (int i = pieces.size() - 1; i >= 0; --i) {
             if (!used[i]) {
@@ -123,10 +149,12 @@ void updatePiecesFromBoard() {
             }
         }
         };
-
     cleanUnused(whitePieces, whiteUsed);
     cleanUnused(blackPieces, blackUsed);
 }
+
+
+
 
 
 bool permission = false;
@@ -167,6 +195,8 @@ void loadBoardFromHistory(int index) {
     }
 }
 void updatePiecesPositions() {
+    savePreviousBoardSnapshot();
+
     // ⬅️ Ruch do tyłu
     if (!permission && back) {
         if (currentBoardIndex < 0) {

@@ -44,7 +44,7 @@ int main(void)
     float angle_y = 0;
     glfwSetTime(0);
     while (!glfwWindowShouldClose(window)) {
-        angle_x += speed_x * glfwGetTime();
+        //angle_x += speed_x * glfwGetTime();
         angle_y += speed_y * glfwGetTime();
         glfwSetTime(0);
         drawScene(window, angle_x, angle_y);
