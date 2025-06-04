@@ -17,6 +17,7 @@ void drawBoard(
     ShaderProgram* spTextured,
     GLuint tex0,
     GLuint tex1,
+    GLuint tex2,
     const std::vector<ChessPiece>& whitePieces,
     const std::vector<ChessPiece>& blackPieces,
     const std::unordered_map<std::string, std::string>& pieceMeshMap,

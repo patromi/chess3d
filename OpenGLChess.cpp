@@ -157,7 +157,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
     glm::mat4 V = glm::lookAt(cameraPos, lookAt, up);
     glm::mat4 P = glm::perspective(glm::radians(60.0f), 1.0f, 1.0f, 50.0f);
 
-    drawBoard(M, V, P, angle_x, angle_y, sp, spTextured, tex0, tex1, whitePieces, blackPieces, pieceMeshMap, ChessModel);
+    drawBoard(M, V, P, angle_x, angle_y, sp, spTextured, tex0, tex1, tex2, whitePieces, blackPieces, pieceMeshMap, ChessModel);
 
     glfwSwapBuffers(window);
 }
