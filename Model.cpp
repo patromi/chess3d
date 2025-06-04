@@ -96,7 +96,7 @@ Mesh Model::processMesh(aiMesh* mesh) {
 	}
 
 	std::string meshName = mesh->mName.C_Str();
-	if (meshName.empty()) meshName = "mesh_" + std::to_string(rand()); // fallback name
+	if (meshName.empty()) meshName = "mesh_" + std::to_string(rand());
 
 	return Mesh(vertices, indices, meshName);
 }

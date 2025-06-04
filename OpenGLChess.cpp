@@ -63,7 +63,7 @@ void error_callback(int error, const char* description) {
 bool d_was_pressed = false;
 bool a_was_pressed = false;
 bool r_was_pressed = false;
-int cameraMode = 0; // 0 - normal, 1 - top-down, 2 - first-person
+int cameraMode = 0; 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_LEFT) speed_x = -PI / 2;
@@ -75,26 +75,26 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         }
 
         if (key == GLFW_KEY_D && !d_was_pressed) {
-            permission = true;         // Flaga ustawiona tylko raz
+            permission = true;
             d_was_pressed = true;
         }
         if (key == GLFW_KEY_A && !a_was_pressed) {
-            back = true;         // Flaga ustawiona tylko raz
+            back = true;         
             a_was_pressed = true;
         }
         if (key == GLFW_KEY_R && !r_was_pressed) {
-            reset = true;         // Flaga ustawiona tylko raz
+            reset = true;         
             r_was_pressed = true;
         }
         if (key == GLFW_KEY_B){
 			std::cout << cameraMode << std::endl;
-            cameraMode = 0;         // Flaga ustawiona tylko raz
+            cameraMode = 0;
         }
         if (key == GLFW_KEY_N) {
-            cameraMode = 1;         // Flaga ustawiona tylko raz
+            cameraMode = 1;
         }
         if (key == GLFW_KEY_M) {
-            cameraMode = 2;         // Flaga ustawiona tylko raz
+            cameraMode = 2;
         }
 
 
@@ -105,15 +105,15 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         if (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN) speed_y = 0;
         if (key == GLFW_KEY_D) {
             d_was_pressed = false;
-            permission = false;// Odblokuj kolejne kliknięcie
+            permission = false;
         }
         if (key == GLFW_KEY_A) {
             a_was_pressed = false;
-            back = false;// Odblokuj kolejne kliknięcie
+            back = false;
         }
         if (key == GLFW_KEY_R) {
             r_was_pressed = false;
-            reset = false;// Odblokuj kolejne kliknięcie
+            reset = false;
         }
     }
 }
@@ -152,7 +152,6 @@ void initOpenGLProgram(GLFWwindow* window) {
 void freeOpenGLProgram(GLFWwindow* window) {
     delete sp;
 }
-#include <iomanip> // dodaj na górze pliku
 
 void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
 
@@ -161,15 +160,15 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
     glm::mat4 M = glm::mat4(1.0f);
 
     glm::vec3 cameraPos;
-    glm::vec3 lookAt = glm::vec3(0.0f, 0.0f, 0.0f); // domyślnie patrzymy na środek planszy
+    glm::vec3 lookAt = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
    
-    float fov = 45.0f; // bardziej oddalony, ale naturalny
+    float fov = 45.0f;
 
-    glm::vec3 center = glm::vec3(0.0f, 0.0f, 0.0f); // lub np. (3.5f, 0.0f, 3.5f)
+    glm::vec3 center = glm::vec3(0.0f, 0.0f, 0.0f);
 
     if (cameraMode == 0) {
-        glm::vec3 center = glm::vec3(-1.0f, 0.0f, -4.0f); // lub np. (3.5f, 0.0f, 3.5f)
+        glm::vec3 center = glm::vec3(-1.0f, 0.0f, -4.0f);
         cameraPos = center + glm::vec3(0.0f, 10.0f, 13.0f);
         lookAt = center;
 
@@ -179,12 +178,12 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
         lookAt = center;
     }
     else if (cameraMode == 2) {
-        cameraPos = center + glm::vec3(0.0f, 20.0f, 0.001f); // nie używaj Z = 0
+        cameraPos = center + glm::vec3(0.0f, 20.0f, 0.001f);
         lookAt = center;
         up = glm::vec3(0.0f, 0.0f, -1.0f);
         fov = 35.0f;
     }
-    // Oblicz rozdzielczość okna dla poprawnego aspect ratio
+    
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
     float aspect = (float)width / (float)height;

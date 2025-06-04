@@ -45,26 +45,24 @@ void printBoard() {
     cout << "  a b c d e f g h\n" << endl;
 }
 
-// Czy figura pasuje do danego typu i koloru
 bool isPiece(char c, char type, bool white) {
     return white ? c == type : c == tolower(type);
 }
 
-// Czy figura typu `type` � na pole (toRow, toCol) z (r, c)
 bool isValidDirection(char type, int r, int c, int toRow, int toCol, bool white) {
     int dr = toRow - r;
     int dc = toCol - c;
     switch (type) {
     case 'P': {
         if (white) {
-            if (dc == 0 && dr == -1 && board[toRow][toCol] == '.') return true; // e2-e3
-            if (dc == 0 && dr == -2 && r == 6 && board[r - 1][c] == '.' && board[toRow][toCol] == '.') return true; // e2-e4
-            if (abs(dc) == 1 && dr == -1 && islower(board[toRow][toCol])) return true; // bicie
+            if (dc == 0 && dr == -1 && board[toRow][toCol] == '.') return true; 
+            if (dc == 0 && dr == -2 && r == 6 && board[r - 1][c] == '.' && board[toRow][toCol] == '.') return true;
+            if (abs(dc) == 1 && dr == -1 && islower(board[toRow][toCol])) return true;
         }
         else {
-            if (dc == 0 && dr == 1 && board[toRow][toCol] == '.') return true; // e7-e6
-            if (dc == 0 && dr == 2 && r == 1 && board[r + 1][c] == '.' && board[toRow][toCol] == '.') return true; // e7-e5
-            if (abs(dc) == 1 && dr == 1 && isupper(board[toRow][toCol])) return true; // bicie
+            if (dc == 0 && dr == 1 && board[toRow][toCol] == '.') return true;
+            if (dc == 0 && dr == 2 && r == 1 && board[r + 1][c] == '.' && board[toRow][toCol] == '.') return true;
+            if (abs(dc) == 1 && dr == 1 && isupper(board[toRow][toCol])) return true;
         }
         return false;
     }
@@ -77,7 +75,6 @@ bool isValidDirection(char type, int r, int c, int toRow, int toCol, bool white)
     return false;
 }
 
-// Znajduje pasuj�c� figur� danego typu, z opcjonalnym okre�leniem kolumny/wiersza �r�d�a
 pair<int, int> findMatchingPiece(char type, bool white, int toRow, int toCol, char disambigFile = 0, char disambigRank = 0) {
     for (int r = 0; r < 8; ++r) {
         for (int c = 0; c < 8; ++c) {
@@ -89,7 +86,7 @@ pair<int, int> findMatchingPiece(char type, bool white, int toRow, int toCol, ch
             if (disambigRank && r != 8 - (disambigRank - '0')) continue;
 
             if (isValidDirection(type, r, c, toRow, toCol, white)) {
-                // sprawd�, czy droga nie jest zablokowana (dla wie�y, go�ca, kr�lowej)
+                
                 if (type == 'R' || type == 'B' || type == 'Q') {
                     int dr = (toRow - r) == 0 ? 0 : (toRow - r) / abs(toRow - r);
                     int dc = (toCol - c) == 0 ? 0 : (toCol - c) / abs(toCol - c);
@@ -167,7 +164,6 @@ void movePiece(const string& move, bool whiteToMove) {
 
     pair<int, int> to = squareToIndex(dest);
 
-    // Specjalna obs�uga dla piona bij�cego w bok, np.hxg5
     if (type == 'P' && !pieceStr.empty() && move.find('x') != string::npos) {
         int fromCol = disamb[0] - 'a';
         int dir = whiteToMove ? -1 : 1;
@@ -208,7 +204,7 @@ std::string pgn = "1.d4 Nf6 2.c4 e6 3.Nf3 d5 4.Nc3 Bb4 5.e3 O-O 6.Bd3 c5 "
 "46.Bg5 e4 47.Be3 Kf6 48.Kg4 Ke5 49.Kg5 Kd5 50.Kf5 a5 "
 "51.Bf2 g5 52.Kxg5 Kc4 53.Kf5 Kb4 54.Kxe4 Kxa4 55.Kd5 Kb5 "
 "56.Kd6 1-0";
-bool end_game = false; // Flaga do sprawdzenia, czy gra si�� zako��czy��a
+bool end_game = false;
 bool flag = true;
 istringstream iss(pgn);
 
@@ -222,20 +218,18 @@ void readPGN(bool permission) {
     }
 
     if (!permission) {
-        return; // Nie pobieramy nowego tokena, nie ruszamy iss
+        return;
     }
 
-    // Jeśli mamy już zapamiętany token z poprzedniego wywołania, użyj go;
-    // w przeciwnym razie pobierz nowy
     if (nextToken.empty()) {
         if (!(iss >> nextToken)) {
-            return; // Nie ma już więcej tokenów
+            return; 
         }
     }
 
     if (nextToken[0] == '{') {
         while (nextToken.back() != '}') {
-            if (!(iss >> nextToken)) return; // Niepełny komentarz
+            if (!(iss >> nextToken)) return;
         }
         nextToken.clear();
         return;
@@ -256,6 +250,5 @@ void readPGN(bool permission) {
     printBoard();
     whiteToMove = !whiteToMove;
 
-    // Wyczyszczenie tokenu, aby przy kolejnym `permission == true` pobrać nowy
     nextToken.clear();
 }

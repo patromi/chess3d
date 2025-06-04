@@ -10,14 +10,11 @@ void main(void) {
 	vec4 texColor0 = texture(textureMap0, iTexCoord0);
 	vec4 texColor1 = texture(textureMap1, iTexCoord0);
 
-	pixelColor= mix(texColor0,texColor1, 0.2);
+	//pixelColor= mix(texColor0,texColor1, 0.2);
 	if (isMoved) {
-		
-		pixelColor = mix(mix(texColor0, texColor1, 0.2),vec4(0.2, 0.2, 0.2, 1.0),0.45); // mocniejsze przyciemnienie
-		
-
+		pixelColor = mix(mix(texColor0, texColor1, 0.2),vec4(0.2, 0.2, 0.2, 1.0),0.45);
 	} else {
-		pixelColor = mix(texColor0, texColor1, 0.2); // mocniejsze przyciemnienie
+		pixelColor = mix(texColor0, texColor1, 0.3);
 	
 	}
 }
