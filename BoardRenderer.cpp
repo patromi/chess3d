@@ -21,14 +21,14 @@ void unsetBoardAttributes(ShaderProgram* spTextured) {
 }
 
 glm::mat4 getTransformedMatrix(float scale, float angle_x, float angle_y, glm::vec3 translate) {
-    const glm::vec3 pivot(-0.5f, 0.0f, -2.0f);
+    const glm::vec3 middle(-0.5f, 0.0f, -2.0f);
 
     glm::mat4 M = glm::mat4(1.0f);
 
-    M = glm::translate(M, pivot);
+    M = glm::translate(M, middle);
     M = glm::rotate(M, angle_y, glm::vec3(0, 1, 0));
     M = glm::rotate(M, angle_x, glm::vec3(1, 0, 0));
-    M = glm::translate(M, -pivot);
+    M = glm::translate(M, -middle);
 
     M = glm::scale(M, glm::vec3(scale));
     M = glm::translate(M, translate);

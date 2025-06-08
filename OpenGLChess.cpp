@@ -110,7 +110,18 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         if (key == GLFW_KEY_ESCAPE) {
             glfwSetWindowShouldClose(window, true);
         }
-
+        if (key == GLFW_KEY_1 && !d_was_pressed) {
+            tex0 = readTexture("texture/cell-0.png");
+            tex1 = readTexture("texture/cell-1.png");;
+        }
+        if (key == GLFW_KEY_2 && !d_was_pressed) {
+            tex0 = readTexture("texture/porcelain1.png");
+            tex1 = readTexture("texture/porcelain2.png");
+        }
+        if (key == GLFW_KEY_3 && !d_was_pressed) {
+            tex0 = readTexture("texture/carbon2.png");
+            tex1 = readTexture("texture/carbon1.png");
+        }
         if (key == GLFW_KEY_D && !d_was_pressed) {
             permission = true;
             d_was_pressed = true;
