@@ -1,31 +1,28 @@
 #version 330
 
-//Zmienne jednorodne
 uniform mat4 P;
 uniform mat4 V;
 uniform mat4 M;
-uniform vec4 lp;
+uniform vec4 lp[4];  // tablica 4 świateł
 
-//Atrybuty
-in vec4 vertex; //wspolrzedne wierzcholka w przestrzeni modelu
-in vec4 color; //kolor wierzchołka
-in vec4 normal; //wektor normalny wierzchołka w przestrzeni modelu
-
-in vec2 texCoord0;
+layout(location = 0) in vec4 vertex;
+layout(location = 1) in vec4 color;
+layout(location = 2) in vec4 normal;
+layout(location = 3) in vec2 texCoord0;
 
 out vec2 iTexCoord0; 
-
 out vec4 iC;
-out vec4 l;
+out vec4 l;  // pojedynczy wektor światła
 out vec4 n;
 out vec4 v;
 
 void main(void) {
-    l = normalize(V * (lp - M * vertex));//znormalizowany wektor do światła w przestrzeni oka
-    n = normalize(V * M * normal);//znormalizowany wektor normalny w przestrzeni oka
-    v = normalize(vec4(0, 0, 0, 1) - V * M * vertex); //Wektor do obserwatora w przestrzeni oka
+    // Dla prostoty - weź pierwsze źródło światła
+    l = normalize(V * (lp[0] - M * vertex));
+    n = normalize(V * M * normal);
+    v = normalize(vec4(0, 0, 0, 1) - V * M * vertex);
     iC = color;
     iTexCoord0 = texCoord0;
 
-    gl_Position=P*V*M*vertex;
+    gl_Position = P * V * M * vertex;
 }

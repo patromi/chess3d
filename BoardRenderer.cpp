@@ -21,11 +21,18 @@ void unsetBoardAttributes(ShaderProgram* spTextured) {
 }
 
 glm::mat4 getTransformedMatrix(float scale, float angle_x, float angle_y, glm::vec3 translate) {
+    const glm::vec3 pivot(-0.5f, 0.0f, -2.0f);
+
     glm::mat4 M = glm::mat4(1.0f);
+
+    M = glm::translate(M, pivot);
+    M = glm::rotate(M, angle_y, glm::vec3(0, 1, 0));
+    M = glm::rotate(M, angle_x, glm::vec3(1, 0, 0));
+    M = glm::translate(M, -pivot);
+
     M = glm::scale(M, glm::vec3(scale));
-    M = glm::rotate(M, angle_y, glm::vec3(0.0f, 1.0f, 0.0f));
-    M = glm::rotate(M, angle_x, glm::vec3(1.0f, 0.0f, 0.0f));
     M = glm::translate(M, translate);
+
     return M;
 }
 
@@ -137,8 +144,12 @@ void drawBoard(
 
     sp->use();
 
-    glm::vec4 lightPos = glm::vec4(-0.5f, 10.0f, -2.0f, 1.0f);
-    glUniform4fv(sp->u("lp"), 1, glm::value_ptr(lightPos));
+    glm::vec4 lightPositions[4] = {
+    glm::vec4(-6.5f, 10.0f, -2.0f, 1.0f),
+    glm::vec4(5.5f, 10.0f, -2.0f, 1.0f),
+    };
+
+    glUniform4fv(sp->u("lp"), 4, glm::value_ptr(lightPositions[0]));
 
     glUniformMatrix4fv(sp->u("P"), 1, false, glm::value_ptr(P));
     glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(V));

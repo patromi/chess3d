@@ -195,6 +195,22 @@ void freeOpenGLProgram(GLFWwindow* window) {
     delete sp;
 }
 
+void drawBackground() {
+    spBackground->use();
+    glBindVertexArray(backgroundQuadVAO);
+
+    glDisable(GL_DEPTH_TEST);  // aby tło nie było przesłonięte
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, backgroundTextures[currentBackground]);
+    glUniform1i(spBackground->u("backgroundTexture"), 0);
+
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glEnable(GL_DEPTH_TEST);
+    glBindVertexArray(0);
+}
+
 void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
