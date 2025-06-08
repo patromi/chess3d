@@ -136,6 +136,10 @@ void drawBoard(
     unsetBoardAttributes(spTextured);
 
     sp->use();
+
+    glm::vec4 lightPos = glm::vec4(-0.5f, 10.0f, -2.0f, 1.0f);
+    glUniform4fv(sp->u("lp"), 1, glm::value_ptr(lightPos));
+
     glUniformMatrix4fv(sp->u("P"), 1, false, glm::value_ptr(P));
     glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(V));
 

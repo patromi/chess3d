@@ -10,6 +10,7 @@ extern float speed_y;
 float aspectRatio = 1;
 ShaderProgram* sp;
 ShaderProgram* spTextured;
+ShaderProgram* spBackground;
 GLuint tex0;
 GLuint tex1;
 GLuint tex2;
@@ -21,6 +22,42 @@ extern Model ChessModel;
 
 extern float angle_x;
 extern float angle_y;
+
+GLuint backgroundTextures[3];
+int currentBackground = 0;
+
+GLuint backgroundQuadVAO, backgroundQuadVBO;
+
+void setupBackgroundQuad() {
+    // Define the vertices for a full-screen quad
+    float quadVertices[] = {
+        // Positions   // Texture Coords
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+         1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+        -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+         1.0f,  1.0f, 0.0f, 1.0f, 1.0f
+    };
+
+    // Generate and bind the VAO
+    glGenVertexArrays(1, &backgroundQuadVAO);
+    glGenBuffers(1, &backgroundQuadVBO);
+
+    glBindVertexArray(backgroundQuadVAO);
+
+    // Generate and bind the VBO
+    glBindBuffer(GL_ARRAY_BUFFER, backgroundQuadVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
+
+    // Set vertex attribute pointers
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0); // Position
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float))); // Texture Coords
+    glEnableVertexAttribArray(1);
+
+    // Unbind VAO
+    glBindVertexArray(0);
+}
 
 GLuint readTexture(const char* filename) {
     GLuint tex;
@@ -130,14 +167,19 @@ void initOpenGLProgram(GLFWwindow* window) {
     glfwSetWindowSizeCallback(window, windowResizeCallback);
     glfwSetKeyCallback(window, keyCallback);
 
+
+
     sp = new ShaderProgram("v_simplest2.glsl", NULL, "f_simplest2.glsl"); // uzywany do rysowania pionkow
 	spTextured = new ShaderProgram("v_simplest1.glsl", NULL, "f_simplest1.glsl"); // uzywany do rysowania planszy
-
+    spBackground = new ShaderProgram("v_depth.glsl", NULL, "f_depth.glsl");
+    
     tex0 = readTexture("texture/cell-0.png");
     tex1 = readTexture("texture/cell-1.png");
     tex2 = readTexture("texture/cell_S.png");
-   
 
+    backgroundTextures[0] = readTexture("background/stars1.png");
+    backgroundTextures[1] = readTexture("background/stars2.png");
+    backgroundTextures[2] = readTexture("background/earth.png");
 
     ChessModel.loadModel("bishop.obj");
     ChessModel.loadModel("pawn.obj");
@@ -157,25 +199,25 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
     glm::mat4 M = glm::mat4(1.0f);
 
     glm::vec3 cameraPos;
     glm::vec3 lookAt = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-   
-    float fov = 45.0f;
 
-    glm::vec3 center = glm::vec3(0.0f, 0.0f, 0.0f);
+    float fov = 45.0f;
+    glm::vec3 center = glm::vec3(-0.5f, 0.0f, -2.0f);
 
     if (cameraMode == 0) {
-        glm::vec3 center = glm::vec3(-1.0f, 0.0f, -4.0f);
-        cameraPos = center + glm::vec3(0.0f, 10.0f, 13.0f);
-        lookAt = center;
-
+        glm::vec3 raisedCenter = center + glm::vec3(0.0f, 2.0f, 0.0f);
+        cameraPos = raisedCenter + glm::vec3(0.0f, 10.0f, 13.0f);
+        lookAt = raisedCenter;
     }
     else if (cameraMode == 1) {
-        cameraPos = center + glm::vec3(0.0f, 10.0f, -13.0f);
-        lookAt = center;
+        glm::vec3 raisedCenter = center + glm::vec3(0.0f, 2.0f, 0.0f);
+        cameraPos = raisedCenter + glm::vec3(0.0f, 10.0f, -13.0f);
+        lookAt = raisedCenter;
     }
     else if (cameraMode == 2) {
         cameraPos = center + glm::vec3(0.0f, 20.0f, 0.001f);
@@ -183,17 +225,17 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
         up = glm::vec3(0.0f, 0.0f, -1.0f);
         fov = 35.0f;
     }
-    
+
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
     float aspect = (float)width / (float)height;
     static int frameCounter = 0;
     frameCounter++;
-  
+
     glm::mat4 V = glm::lookAt(cameraPos, lookAt, up);
     glm::mat4 P = glm::perspective(glm::radians(fov), aspect, 0.1f, 100.0f);
 
-    drawBoard(M, V, P, angle_x, angle_y, sp, spTextured, tex0, tex1,tex2,
+    drawBoard(M, V, P, angle_x, angle_y, sp, spTextured, tex0, tex1, tex2,
         whitePieces, blackPieces, pieceMeshMap, ChessModel);
 
     glfwSwapBuffers(window);
