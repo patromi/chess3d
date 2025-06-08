@@ -31,7 +31,7 @@ glm::mat4 getTransformedMatrix(float scale, float angle_x, float angle_y, glm::v
     M = glm::translate(M, -middle);
 
     M = glm::scale(M, glm::vec3(scale));
-    M = glm::translate(M, translate);
+    M = glm::translate(M, translate + glm::vec3(0.0f, 2.0f, 0.0f));
 
     return M;
 }
@@ -66,7 +66,7 @@ void drawChessBoard(float angle_x, float angle_y, ShaderProgram* spTextured, GLu
 void drawPiece(const ChessPiece& piece, float angle_x, float angle_y, ShaderProgram* sp, Model& ChessModel, const std::unordered_map<std::string, std::string>& pieceMeshMap, GLuint tex0, GLuint tex1, GLuint tex2) {
     std::string meshName = pieceMeshMap.at(piece.name);
 
-    glm::mat4 pieceModel = getTransformedMatrix(0.5f, angle_x, angle_y, piece.position);
+    glm::mat4 pieceModel = getTransformedMatrix(0.5f, angle_x, angle_y, piece.position + glm::vec3(0.0f, 2.0f, 0.0f));
 	pieceModel = glm::scale(pieceModel, glm::vec3(0.9f));
 
     if (piece.name == "Knight" or piece.name == "King") {
@@ -144,9 +144,9 @@ void drawBoard(
 
     sp->use();
 
-    glm::vec4 lightPositions[4] = {
-    glm::vec4(-6.5f, 10.0f, -2.0f, 1.0f),
-    glm::vec4(5.5f, 10.0f, -2.0f, 1.0f),
+    glm::vec4 lightPositions[2] = {
+    glm::vec4(-8.5f, 10.0f, -2.0f, 1.0f),
+    glm::vec4(7.5f, 10.0f, -2.0f, 1.0f),
     };
 
     glUniform4fv(sp->u("lp"), 4, glm::value_ptr(lightPositions[0]));

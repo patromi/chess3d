@@ -10,7 +10,6 @@ extern float speed_y;
 float aspectRatio = 1;
 ShaderProgram* sp;
 ShaderProgram* spTextured;
-ShaderProgram* spBackground;
 GLuint tex0;
 GLuint tex1;
 GLuint tex2;
@@ -22,42 +21,6 @@ extern Model ChessModel;
 
 extern float angle_x;
 extern float angle_y;
-
-GLuint backgroundTextures[3];
-int currentBackground = 0;
-
-GLuint backgroundQuadVAO, backgroundQuadVBO;
-
-void setupBackgroundQuad() {
-    // Define the vertices for a full-screen quad
-    float quadVertices[] = {
-        // Positions   // Texture Coords
-        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-         1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-        -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-         1.0f,  1.0f, 0.0f, 1.0f, 1.0f
-    };
-
-    // Generate and bind the VAO
-    glGenVertexArrays(1, &backgroundQuadVAO);
-    glGenBuffers(1, &backgroundQuadVBO);
-
-    glBindVertexArray(backgroundQuadVAO);
-
-    // Generate and bind the VBO
-    glBindBuffer(GL_ARRAY_BUFFER, backgroundQuadVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
-
-    // Set vertex attribute pointers
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0); // Position
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float))); // Texture Coords
-    glEnableVertexAttribArray(1);
-
-    // Unbind VAO
-    glBindVertexArray(0);
-}
 
 GLuint readTexture(const char* filename) {
     GLuint tex;
@@ -144,8 +107,6 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         if (key == GLFW_KEY_M) {
             cameraMode = 2;
         }
-
-
     }
 
     if (action == GLFW_RELEASE) {
@@ -180,17 +141,12 @@ void initOpenGLProgram(GLFWwindow* window) {
 
 
 
-    sp = new ShaderProgram("v_simplest2.glsl", NULL, "f_simplest2.glsl"); // uzywany do rysowania pionkow
-	spTextured = new ShaderProgram("v_simplest1.glsl", NULL, "f_simplest1.glsl"); // uzywany do rysowania planszy
-    spBackground = new ShaderProgram("v_depth.glsl", NULL, "f_depth.glsl");
+    sp = new ShaderProgram("v_simplest2.glsl", NULL, "f_simplest2.glsl");
+	spTextured = new ShaderProgram("v_simplest1.glsl", NULL, "f_simplest1.glsl");
     
     tex0 = readTexture("texture/cell-0.png");
     tex1 = readTexture("texture/cell-1.png");
     tex2 = readTexture("texture/cell_S.png");
-
-    backgroundTextures[0] = readTexture("background/stars1.png");
-    backgroundTextures[1] = readTexture("background/stars2.png");
-    backgroundTextures[2] = readTexture("background/earth.png");
 
     ChessModel.loadModel("bishop.obj");
     ChessModel.loadModel("pawn.obj");
@@ -206,26 +162,20 @@ void freeOpenGLProgram(GLFWwindow* window) {
     delete sp;
 }
 
-void drawBackground() {
-    spBackground->use();
-    glBindVertexArray(backgroundQuadVAO);
-
-    glDisable(GL_DEPTH_TEST);  // aby tło nie było przesłonięte
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, backgroundTextures[currentBackground]);
-    glUniform1i(spBackground->u("backgroundTexture"), 0);
-
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-    glEnable(GL_DEPTH_TEST);
-    glBindVertexArray(0);
-}
-
 void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
-
+    
+    if (cameraMode == 2) {
+        glClearColor(0.575f, 0.65f, 0.725f, 1.0f);
+    }
+	else if (cameraMode == 1) {
+        glClearColor(0.35f, 0.4f, 0.45f, 1.0f);
+	}
+    else {
+        glClearColor(0.8f, 0.9f, 1.0f, 1.0f);
+    }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glm::mat4 M = glm::mat4(1.0f);
 
@@ -247,7 +197,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
         lookAt = raisedCenter;
     }
     else if (cameraMode == 2) {
-        cameraPos = center + glm::vec3(0.0f, 20.0f, 0.001f);
+        cameraPos = center + glm::vec3(0.0f, 22.0f, 0.001f);
         lookAt = center;
         up = glm::vec3(0.0f, 0.0f, -1.0f);
         fov = 35.0f;
